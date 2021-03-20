@@ -1,0 +1,13 @@
+Package: endoR
+Type: Package
+Title: endoR
+Version: 0.1.0
+Author: Albane Ruaud
+Maintainer: Albane Ruaud <albane.ruaud@tuebingen.mpg.de>
+Description: endoR extracts and visualizes how predictive variables contribute to tree ensemble model accuracy.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+Imports:
+Suggests:
+RoxygenNote: 7.1.1
