@@ -1,6 +1,6 @@
 #' Run model2DE on several bootstrap resamples.
 #'
-#' Wrapper around the model2DE function to run it on several bootstrap resamples. 
+#' Wrapper around the model2DE function to run it on several bootstrap resamples.
 #'
 #' @param ... arguments to be passed to the model2DE funtion.
 #' @param times number of bootstraps
@@ -14,9 +14,9 @@
 #' @export
 model2DE_resampling <- function(
       model, model_type, data, target, classPos = NULL
-      , times = 10, p = .5, sample_weight = sample_weight
-      , ntree = 'all', maxdepth = Inf      
-      , dummy_var = NULL 
+      , times = 10, p = .5, sample_weight = NULL
+      , ntree = 'all', maxdepth = Inf
+      , dummy_var = NULL
       , prune = TRUE, maxDecay = 0.05, typeDecay = 2
       , discretize = TRUE, K = 2, features_ctg = NULL
       , filter = TRUE, min_imp = 0.9
@@ -50,7 +50,7 @@ for (ix in partitions){
     res <- model2DE(data = data[ix, ], target = target[ix]
                       , exec = exec
                       , classPos = classPos
-                      , prune = prune, maxDecay = maxDecay, typeDecay = typeDecay 
+                      , prune = prune, maxDecay = maxDecay, typeDecay = typeDecay
                       , filter = filter
                       , in_parallel = in_parallel, n_cores = n_cores
                       , light = TRUE)
@@ -62,6 +62,6 @@ for (ix in partitions){
 }
 
 
-return(list('partitions' = partitions, 'exec' = exec, 'resamp' = resamp)) 
+return(list('partitions' = partitions, 'exec' = exec, 'resamp' = resamp))
 
 }
