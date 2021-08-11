@@ -77,24 +77,24 @@ nodes <- nodes[,'importance' := round(err.rm, digits = 10)-round(err, digits = 1
 if (aggregate_taxa == TRUE){
 featImp <- copy(nodes)
 
-# replace variables column numbers
-featImp <- featNames[ featImp, on =  'var'][,var:=NULL]
-setnames(featImp, old = 'varN', new = 'var')
-featImp <- unique(featImp[, 'Feature' := str_extract(var, pattern = '.*(?=\\_{2})') ][
-                  is.na(Feature), 'Feature':=var][,.(Feature, importance)][
-                  , importance:= sum(importance), by = Feature])
-setorder(featImp, -importance)
-res$featImp <- featImp
+  # replace variables column numbers
+  featImp <- featNames[ featImp, on =  'var'][,var:=NULL]
+  setnames(featImp, old = 'varN', new = 'var')
+  featImp <- unique(featImp[, 'Feature' := str_extract(var, pattern = '.*(?=\\_{2})') ][
+                    is.na(Feature), 'Feature':=var][,.(Feature, importance)][
+                    , importance:= sum(importance), by = Feature])
+  setorder(featImp, -importance)
+  res$featImp <- featImp
 
-newFeatures <- aggregateTaxa(taxa = taxa,features = featImp$Feature, weights = featImp)
-if ('Recipient' %in% newFeatures$changed){
-    tmp <- as.data.table(newFeatures)[,.(Feature, newFeature)][newFeature != Feature,]
-    mapCol <- unlist(tmp[,'newFeature'])
-    names(mapCol) <- paste0("^", unlist(tmp[,'Feature']), "(?=(\\_{2}.*)|$)")
-    featNames$varN <- str_replace_all(featNames$varN, mapCol)
-}
-res$featNames <- featNames
-res$newFeatures <- newFeatures
+  newFeatures <- aggregateTaxa(taxa = taxa,features = featImp$Feature, weights = featImp)
+  if ('Recipient' %in% newFeatures$changed){
+      tmp <- as.data.table(newFeatures)[,.(Feature, newFeature)][newFeature != Feature,]
+      mapCol <- unlist(tmp[,'newFeature'])
+      names(mapCol) <- paste0("^", unlist(tmp[,'Feature']), "(?=(\\_{2}.*)|$)")
+      featNames$varN <- str_replace_all(featNames$varN, mapCol)
+  }
+  res$featNames <- featNames
+  res$newFeatures <- newFeatures
 }
 
 
