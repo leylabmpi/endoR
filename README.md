@@ -13,7 +13,7 @@ Code and manual of the endoR R-package (Ruaud et al, in preparation).
 
 **Procedure:** endoR is a method that extracts and visualizes how predictive variables contribute to tree ensemble model accuracy. The fitted model is simplified into a decision ensemble and then reduced via regularization and bootstrapping to retain only the most essential aspects. Information about predictive variables and their pairwise interactions are extracted from the decision ensemble and displayed as a network for straightforward interpretation. The network and importance scores derived from endoR help understand how tree ensemble models make predictions from variables and interactions between variables.
 
-[endoR overall workflow](figures/Workflow.png)
+![endoR overall workflow](figures/Workflow.png)
 
 
 # Usage
@@ -33,7 +33,7 @@ Before: select and fit a machine learning model (regression or classification)
 # Background
 
 **From tree ensemble to decision ensembles**
-![Schema decisions](figures/Workflow.png)]
+![Schema decisions](figures/Decisions_summary.png)]
 
 A decision consist of a full branch of a decision tree: 
 - all splits along the branch form the *rule* of the decision;
