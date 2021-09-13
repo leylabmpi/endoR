@@ -33,6 +33,7 @@ Before: select and fit a machine learning model (regression or classification)
 # Background
 
 **From tree ensemble to decision ensembles**
+
 ![Schema decisions](figures/Decisions_summary.png)
 
 A decision consist of a full branch of a decision tree: 
@@ -43,6 +44,7 @@ A decision consist of a full branch of a decision tree:
 
 
 **Decision importance**
+
 We measure the decision importance by comparing the error of the decision to what could be expected by a random guessing (i.e., the coefficient of regression R<sup>2</sup> for regressions and Cohen's kappa for classifications).
 
-[Decision importance equation](https://latex.codecogs.com/svg.image?I_D&space;\coloneqq&space;\Big(&space;1&space;-&space;\frac{\alpha(S_D,&space;\hat{y}_D)}{\alpha(S_D,\bar{y})}&space;\Big)&space;\cdot&space;|S_D|)
+<img src="https://latex.codecogs.com/svg.image?\bg_white&space;I_D&space;\coloneqq&space;\Big(&space;1&space;-&space;\frac{\alpha(S_D,&space;\hat{y}_D)}{\alpha(S_D,\bar{y})}&space;\Big)&space;\cdot&space;|S_D|" title="\bg_white I_D \coloneqq \Big( 1 - \frac{\alpha(S_D, \hat{y}_D)}{\alpha(S_D,\bar{y})} \Big) \cdot |S_D|" />
