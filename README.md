@@ -45,6 +45,15 @@ A decision consist of a full branch of a decision tree:
 
 **Decision importance**
 
-We measure the decision importance by comparing the error of the decision to what could be expected by a random guessing (i.e., the coefficient of regression R<sup>2</sup> for regressions and Cohen's kappa for classifications).
+We measure the decision importance by comparing the error of the decision to what could be expected by a random guessing, i.e., the mean response variable across all samples. Respectively for regressions and classifications, this corresponds to calculating the coefficient of determination R<sup>2</sup> and Cohen's kappa. We weight 
 
 <img src="https://latex.codecogs.com/svg.image?\bg_white&space;I_D&space;=&space;\Big(&space;1&space;-&space;\frac{\alpha(S_D,&space;\hat{y}_D)}{\alpha(S_D,\bar{y})}&space;\Big)&space;\cdot&space;|S_D|" title="\bg_white I_D = \Big( 1 - \frac{\alpha(S_D, \hat{y}_D)}{\alpha(S_D,\bar{y})} \Big) \cdot |S_D|" />
+
+
+**Feature and interaction importance** = how much a feature, or pair of features, contributes to the accuracy of predictions
+
+**Feature and interaction influence** = how a feature, or pair of features, changes precisions (e.g., increases the predicted age or changes the prediction towards "disease" vs "healthy" state)
+
+**Regularization** to obtain a stable decision ensemble that is generalizable
+- decision pruning = remove unimportant variables from decision rules (i.e. the ones that do not increase the decision error much than a threshold)
+- bootstrapping and stability selection = select decisions measured as important across bootstrap resamples (i.e, across bootstraps of observations/samples)
