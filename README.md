@@ -36,7 +36,7 @@ Before: select and fit a machine learning model (regression or classification)
 
 ![Schema decisions](figures/Decisions_summary.png)
 
-A decision consist of a full branch of a decision tree: 
+A decision consists of a full branch of a decision tree: 
 - all splits along the branch form the *rule* of the decision;
 - the average response variable in the subset of observations following the rule corresponds to the *prediction* of the decision;
 - the sample support is the set of observations that follow the rule;
