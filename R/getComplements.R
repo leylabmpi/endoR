@@ -2,7 +2,7 @@ getComplements <- function(rules, data, target, classPos = NULL
 							, in_parallel = FALSE, n_cores=detectCores() - 1, cluster = NULL){
 
 	if (!('data.table' %in% class(rules))){rules <- as.data.table(rules)}
-	
+
 	# give rules ID
 	rules <-rules[,ruleID:=paste0('decision',.I)]
 
@@ -27,9 +27,9 @@ getComplements <- function(rules, data, target, classPos = NULL
   	# the signs
   	sVar <- unlist(lapply(tmp, function(x){x$s}))
   	names(sVar) <- str_replace(names(sVar), pattern = '^decision[:digit:]+\\.', replacement = '')
-  	sVar <- unlist( lapply( sVar, FUN = function(x){eval(parse(text=x))} ) ) 
+  	sVar <- unlist( lapply( sVar, FUN = function(x){eval(parse(text=x))} ) )
 
-	
+
 	# get the directions
 	directions <- data.table( ruleID = str_extract(names(sVar), pattern = '^decision[:digit:]+(?=var)')
 						, var = str_extract(names(sVar), pattern = '(?<=var)[:digit:]+$')
@@ -43,13 +43,16 @@ getComplements <- function(rules, data, target, classPos = NULL
 						, var = str_extract(names(rulesAdd)[cIx], pattern = '(?<=varRm)[:digit:]+$')
 						, condition = rulesAdd[cIx])
 	tmp <- unique(copy(rulesRm)[condition != '', .(condition)]) # remove repetitions due to the dummy variables
-	suppressMessages(
-	tmp <- getDecisionsMetrics(tmp, data = data, target = target, classPos = classPos
-                                , importances = FALSE
-                                , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster)
-	)
-	rulesRm <- tmp[rulesRm, on = 'condition']
-	#rulesRm <- merge(rulesRm, tmp, by = 'condition', all.x = TRUE)
+	if (length(tmp == 0)){
+	  message("There is no interaction in the decision ensemble, only single variable effects.")
+	} else {
+	  suppressMessages(
+	    tmp <- getDecisionsMetrics(tmp, data = data, target = target, classPos = classPos
+	                               , importances = FALSE
+	                               , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster)
+	    )
+	  rulesRm <- tmp[rulesRm, on = 'condition']
+	}
 
 	# add the metrics for the "empty decisions" (original rule = a single variable only)
 	tmp <- measureAll(data = data, target = target, classPos = classPos)
@@ -90,12 +93,12 @@ complementSingleRule <- function(rule){
     ruleExec <- ruleExec[-in_dup]
     vars <- vars[-in_dup]
   }
-  
+
   ruleID <- rule['ruleID']
   signs <- c("<=" = 'a', '>' = "b", 'a' = '>', "b" = "<=") #need that trick to be sure replace them all when there are 2!
   newRules <- list()
   s <- list()
-  
+
   for (i in 1:length(ruleExec)){
     if(str_detect(ruleExec[i], pattern = "&")){
       comp <- str_replace_all(ruleExec[i], signs)
@@ -107,12 +110,12 @@ complementSingleRule <- function(rule){
         sV <- 'TRUE'
       } else { sV <- 'FALSE'}
     }
-    
+
     rm <- paste(ruleExec[-i], collapse = " & ")
-    
+
     newRules[[paste0(ruleID,'varRm', vars[i])]] <- rm
     s[[paste0(ruleID,'var', vars[i])]] <- sV
   }
-  
+
   return(list('nR' = newRules, 's' = s))
 }

@@ -1,0 +1,53 @@
+---
+title: "endoR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{endoR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette illustrates how to apply endoR to a random forest model. For this, we will use the titanic dataset (copied from the `DALEX` R-package): the survival, or not, of passengers of the RMS Titanic will be predicted using the age, gender, number of siblings, etc. We will just fit a model and apply endoR to it.
+
+
+# Preambule
+```{r setup}
+library(endoR)
+library(randomForest)
+library(tidyverse)
+library(inTrees)
+library(data.table)
+```
+
+
+# Data
+```{r}
+data("titanic")
+```
+
+# Fit model
+```{r}
+set.seed(1313)
+titanic_rf <- randomForest(survived ~ class + gender + age + sibsp + parch + fare + embarked, data = titanic)
+titanic_rf
+```
+
+# run endoR locally, no bootstrapping
+```{r}
+require(parallel)
+de_noboot <- model2DE(model = titanic_rf, model_type = 'rf'
+                      , data = select(titanic, -survived), target = titanic$survived
+                      , classPos = 'yes'
+                      , discretize = TRUE, K = 4
+                      , prune = TRUE
+                      , filter = TRUE
+                      , in_parallel = TRUE, n_cores = 3)
+```
+

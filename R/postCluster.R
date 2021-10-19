@@ -3,7 +3,7 @@ postCluster <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE
 
   agg_res <- list()
   on.exit(return(agg_res), add = TRUE, after = TRUE)
-    
+
   # Get the number of rules to select per subset
   # average number of decisions per subset
   pall <- mean(sapply(res, function(x){return(x$pdecisions)} ))
@@ -15,7 +15,7 @@ postCluster <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE
   rules_agg <- lapply(res, function(x, qsubset){setorder(x$rules, -imp);return(x$rules[1:qsubset,])}, qsubset=qsubset )
   rules_agg <- do.call(what = rbind, rules_agg)
   rules_agg <- rules_agg[,.(len,support,err,condition, pred, imp, n)]
-  
+
   rules_agg[is.na(rules_agg)] <- 0
   agg_res$rules_agg <- rules_agg
 
@@ -31,14 +31,19 @@ postCluster <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE
   agg_res$rules_summary <- rules_summary
 
   # subset decisions to get the most stable ones
-  cat(nrow(subset(rules_summary, inN >= length(res)*minN)), 'decisions in >=', length(res)*minN, 'subsets.\n')
   final_decisions <- rules_summary[inN >= length(res)*minN, (condition)]
+  if (length(final_decisions) == 0){
+    warning("No stable decision ensemble could be reached: try increasing alpha.")
+    return(agg_res)
+  }
+  cat(nrow(subset(rules_summary, inN >= length(res)*minN)), 'decisions in >=', length(res)*minN, 'subsets.\n')
+
 
   # get all edges
   edges_agg <- lapply(res, function(x){return(x$edges_agg)} )
   edges_agg <- do.call(what = rbind, edges_agg)
   agg_res$edges_agg <- copy(edges_agg)
-  
+
   # get all nodes
   nodes_agg <- lapply(res, function(x){return(x$nodes_agg)} )
   nodes_agg <- do.call(what = rbind, nodes_agg)
@@ -81,9 +86,9 @@ postCluster <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE
                  , by = c('var', 'condition')]
   nodes <- merge(nodes, rules_summary[,.(condition, imp, n, len)], all.x = TRUE, by = 'condition')[
                , .(importance = sum(importance*imp*n)
-                   , wParticipation = sum(importance*imp*n)/sum(imp*n) 
+                   , wParticipation = sum(importance*imp*n)/sum(imp*n)
                    , influence = sum(influence*imp*n)/sum(imp*n) ), by = var]
-  
+
   # summary edges
   edges <- edges[is.na(importance), importance:=0][, .( importance= mean(importance), influence = mean(influence)
                      , association_sign = mean(d.x*d.y) )
@@ -91,12 +96,12 @@ postCluster <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE
   edges <- merge(edges, rules_summary[,.(condition, imp, n, len)], all.x = TRUE, by = 'condition')[
                , .(importance = sum(importance*imp*n), wParticipation = sum(importance*imp*n)/sum(imp*n)
                    , influence = sum(influence*imp*n)/sum(imp*n)
-                   , association_sign = sum(association_sign*imp*n)/sum(imp*n) ) 
+                   , association_sign = sum(association_sign*imp*n)/sum(imp*n) )
                    , by = c('x', 'y')][,'d_assoc':= as.character(sign(association_sign))]
-                   
 
-  agg_res$nodes <- nodes 
-  agg_res$edges <- edges 
-    
+
+  agg_res$nodes <- nodes
+  agg_res$edges <- edges
+
   return(agg_res)
 }

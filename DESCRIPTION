@@ -8,6 +8,10 @@ Description: endoR extracts and visualizes how predictive variables contribute t
 License: MIT
 Encoding: UTF-8
 LazyData: true
-Imports:
 Suggests:
+    knitr,
+    rmarkdown
 RoxygenNote: 7.1.1
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
