@@ -17,6 +17,7 @@ Code and manual of the endoR R-package (Ruaud et al, in preparation).
 
 
 # Usage
+Installation: `devtools::install_github(repo = "aruaud/endoR")`
 
 Before: select and fit a machine learning model (regression or classification)
 -  random forest R-packages: randomForest, ranger 
