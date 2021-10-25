@@ -147,7 +147,7 @@ model2DE <- function(
 
   ##### Prune #####
   if (prune == TRUE){
-    rules <- pruneDecisions(rules = rules,data = data,target, classPos = classPos
+    rules <- pruneDecisions(rules = rules,data = data, target = target, classPos = classPos
                         , maxDecay = maxDecay, typeDecay = typeDecay
                         , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster)
     if (light == FALSE){ res$rules_pruned <- copy(rules) }

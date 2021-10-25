@@ -43,7 +43,7 @@ if (is.null(additional_decisions)){
 } else {rulesAdd <- additional_decisions}
 res$rulesAdd <- rulesAdd
 
-if (length(unique(target)) <= 2){
+if (is.numeric(target) == FALSE){
   target <- ifelse(target == classPos, 1, 0)
   type <- 'classification'
 } else{type <- 'reg'}
