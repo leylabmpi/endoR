@@ -14,7 +14,7 @@ changeDecisionsDummies <- function(rules, dummy_var, data, target, classPos = NU
         if (is.null(cluster) == TRUE){
             message('Initiate parallelisation ... ')
             cluster <- makeCluster(n_cores)
-            clusterEvalQ(cluster, library(babR))
+            clusterEvalQ(cluster, library(endoR))
             clusterEvalQ(cluster, library(stringr))
             on.exit(stopCluster(cluster))
         }

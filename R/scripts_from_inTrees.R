@@ -74,7 +74,7 @@ function(treeList,X,ntree=100,maxdepth=Inf, in_parallel = FALSE, n_cores = detec
       message('Initiate parallelisation ... ')
       cluster <- makeCluster(n_cores)
       clusterEvalQ(cluster, library(inTrees))
-      clusterEvalQ(cluster, library(babR))
+      clusterEvalQ(cluster, library(endoR))
       on.exit(stopCluster(cluster))
     }
     

@@ -44,7 +44,7 @@ discretizeDecisions <- function(rules, data = NULL, target
           message('Initiate parallelisation ... ')
           cluster <- makeCluster(n_cores)
           on.exit(stopCluster(cluster))
-          clusterEvalQ(cluster, library(babR))
+          clusterEvalQ(cluster, library(endoR))
           clusterEvalQ(cluster, library(dplyr))
           clusterEvalQ(cluster, library(stringr))
         }

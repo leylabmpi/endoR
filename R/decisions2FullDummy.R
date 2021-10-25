@@ -21,7 +21,7 @@ if (in_parallel == TRUE){
     if (is.null(cluster) == TRUE){
           message('Initiate parallelisation ... ')
           cluster <- makeCluster(n_cores)
-          clusterEvalQ(cluster, library(babR))
+          clusterEvalQ(cluster, library(endoR))
           clusterEvalQ(cluster, library(stringr))
           on.exit(stopCluster(cluster))
     }

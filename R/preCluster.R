@@ -64,7 +64,7 @@ preCluster <- function(
 
   if (in_parallel == TRUE){
     cluster <- makeCluster(n_cores)
-    clusterEvalQ(cluster, library(babR))
+    clusterEvalQ(cluster, library(endoR))
     clusterEvalQ(cluster, library(stringr))
     clusterEvalQ(cluster, library(dplyr))
     clusterEvalQ(cluster, library(inTrees))
