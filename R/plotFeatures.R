@@ -23,7 +23,7 @@ theme_classic() +
 theme(axis.text.y = element_text(size = rel(1.2)), axis.text.x = element_text(size = rel(1.2))
       ,legend.text = element_text(size = rel(1.2))
       ,panel.grid.major.y = element_line(colour = "grey", size = .2)) + 
-labs(x = '', y = 'Importance', title = 'Average importance') 
+labs(x = '', y = 'Importance', title = 'Aggregated importance') 
 
 
 ### Make the level influence
@@ -31,8 +31,7 @@ labs(x = '', y = 'Importance', title = 'Average importance')
 agg_inf <- decision_ensemble$nodes %>% select(var, influence)
 agg_inf$level <- str_extract(agg_inf$var, pattern = '(?<=\\_{2}).*')
 agg_inf$Feature_short <- str_extract(agg_inf$var, pattern = '.*(?=\\_{2})')%>% 
-                    str_replace(pattern = '(?<=s\\_[:upper:])[:lower:]+(?=\\_)', replacement = '') %>% 
-                    str_replace(pattern = '^[:lower:]\\_', replacement = '')
+                    str_replace(pattern = '(?<=s\\_[:upper:])[:lower:]+(?=\\_)', replacement = '')
 agg_inf$Feature_short <- ifelse(is.na(agg_inf$Feature_short), agg_inf$var, agg_inf$Feature_short)
 agg_inf <- left_join(agg_inf, agg_imp, by = c('Feature_short' = 'Feature'))
 # Spread across levels for numeric variables
