@@ -13,8 +13,8 @@
 #' @export
 plotNetwork <- function(decision_ensemble, n_edges = NULL
     , layout = 'stress'
-    , colour_edge_low = "firebrick2", colour_edge_mid = "grey90", colour_edge_high = "dodgerblue3"
-    , colour_node_low = "firebrick2", colour_node_mid = "grey90", colour_node_high = "dodgerblue3"
+    , colour_edge_low = "#E69F00", colour_edge_mid = "grey87", colour_edge_high = "#0072B2"
+    , colour_node_low = "#E69F00", colour_node_mid = "grey87", colour_node_high = "#0072B2"
     , text_size = 4
     , hide_nodes = 0
 
