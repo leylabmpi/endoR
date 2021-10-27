@@ -12,7 +12,7 @@ plotFeatures <- function(decision_ensemble, pi_thr, levels_order = NULL){
 	
 ### Make the feature importance plot
 # Get importances across levels
-tmp <- decision_ensemble$rules_summary %>% subset(inN >= pi_thr, select = condition) %>% unlist
+tmp <- decision_ensemble$rules_summary %>% subset(inN >= decision_ensemble$parameters['minN'], select = condition) %>% unlist
 agg_imp <- featureImportance(decision_ensemble$nodes_agg %>% subset(condition %in% tmp) ) 
 agg_imp$Feature <- factor(agg_imp$Feature, levels = agg_imp$Feature[order(agg_imp$importance)])
 # Plot

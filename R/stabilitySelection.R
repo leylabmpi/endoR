@@ -19,6 +19,7 @@ stabilitySelection <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa 
   qsubset <- sqrt((2*minN-1)*alpha_error*pall)
   if (qsubset < 1){qsubset <- 1} # if less than a decision should be selected, take at least one
   cat(qsubset, ' rules per sub-sample selected. ')
+  agg_res$parameters <- c('minN' = length(res)*minN, 'alpha_error' = alpha_error, 'q' = qsubset)
 
   # Create a data.frame with intersection of rules
   rules_agg <- lapply(res, function(x, qsubset){setorder(x$rules, -imp);return(x$rules[1:qsubset,])}, qsubset=qsubset )
