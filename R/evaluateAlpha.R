@@ -27,7 +27,7 @@ evaluateAlpha <- function(rules, alphas = c(5, 10, 15, 20, 30, 50, 75), pi_thr =
 	res <- list()
 
 	for (i in 1:length(alphas)){
-	    tmp <- stabilitySelection(res = rules, alpha_error = alphas[i], pi_thr = pi_thr, aggregate_taxa = aggregate_taxa, taxa = taxa)
+	    tmp <- stabilitySelection(rules = rules, alpha_error = alphas[i], pi_thr = pi_thr, aggregate_taxa = aggregate_taxa, taxa = taxa)
 	    if (decision_ensembles == TRUE){res[[alphas[i]]] <- tmp}
 
 	    tmp <- subset(tmp$rules_summary, inN >= minN)
