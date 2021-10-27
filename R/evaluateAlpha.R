@@ -21,7 +21,7 @@ evaluateAlpha <- function(rules, alphas = c(5, 10, 15, 20, 30, 50, 75), pi_thr =
 	if (is.null(data) & !('data' %in% names(rules))){
 		warning("Please provide the data used to create the decision ensemble (original if not discretized, precluster$data if discretized).")
 		return()
-	}
+	} else if ('data' %in% names(rules)) {data <- rules$data}
 
 	res <- list()
 
