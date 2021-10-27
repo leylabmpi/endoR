@@ -62,6 +62,6 @@ for (ix in partitions){
 }
 
 
-return(list('partitions' = partitions, 'exec' = exec, 'resamp' = resamp))
+return(list('partitions' = partitions, 'exec' = exec, 'data' = data, 'resamp' = resamp))
 
 }
