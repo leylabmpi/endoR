@@ -7,7 +7,8 @@
 #' @param levels_order optional, order for variables levels on the influence plot 
 #' @return 2 ggplots arranged in a row with ggpubr.
 #' @export
-plotFeatures <- function(decision_ensemble, levels_order = NULL){
+plotFeatures <- function(decision_ensemble, levels_order = NULL
+                        , colour_low = "#E69F00", colour_mid = "grey87", colour_high = "#0072B2"){
 	
 ### Make the feature importance plot
 # Get importances across levels
@@ -55,7 +56,7 @@ theme(axis.text.y = element_blank()
       ) + 
 labs(x = 'Level', y = '', title = 'Influence per level') +
 
-scale_fill_gradient2(low = "#E69F00", mid = "grey87", high ="#0072B2", midpoint = 0, name = 'Influence on\nphenotype')
+scale_fill_gradient2(low = colour_low, mid = colour_mid, high = colour_high, midpoint = 0, name = 'Influence on\nphenotype')
 
 ### Combine plots
 paggs <- ggpubr::ggarrange(paggimp+theme(legend.position = 'none')
