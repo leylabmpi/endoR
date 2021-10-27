@@ -3,32 +3,32 @@
 #' Performs stability selection after bootstrapping with the model2DE_cluster or model2DE_resampling functions. 
 #' The procedure is adapted from Meinshausenand and Buehlmann (2010): the best decisions from each bootstrap are pre-seleected and the the ones that were pre-selected in a certain fraction of bootstraps are included in the stable decision ensemble.
 #' The decision importances and multiplicities are averaged across bootstraps. Decision-wise feature and interaction importances and influences are averaged across bootstraps before computing the feature and interaction importances and influences from the stable decision ensemble.
-#' @param res list of bootstrap results
+#' @param rules list of bootstrap results
 #' @param alpha_error expected number of false positive decision selected (default = 1).
 #' @param pi_thr fraction of bootstraps in which a decision should have been selected in to be included in the stable decision ensemble (default = 0.7).
 #' @param aggregate_taxa should taxa be aggregated at the genus level (if species have lower importance than their genus) or species level (if a genus is represented by a unique species)
 #' @param taxa if aggregate_taxa = TRUE, a data.frame with all taxa included in the dataset: columns = taxonomic ranks (with columns f, g, and s)
 #' @return A list with all decisions from all bootstrasps, the summary of decisions across bootstraps, the feature and interaction importance and influence in the nodes and edges dataframes, as well as the the decision-wise feature and interaction importances and influences the nodes_agg and edges_agg dataframes.
 #' @export
-stabilitySelection <- function(res, alpha_error = 1, pi_thr = 0.7, aggregate_taxa = FALSE, taxa = NULL){
+stabilitySelection <- function(rules, alpha_error = 1, pi_thr = 0.7, aggregate_taxa = FALSE, taxa = NULL){
 
   agg_res <- list()
   on.exit(return(agg_res), add = TRUE, after = TRUE)
 
   # if endoR has not been ran on the cluster, the bootstraps are in 'resamp'
-  if ('resamp' %in% names(res)){rules <- rules$resamp}
+  if ('resamp' %in% names(rules)){rules <- rules$resamp}
     
   # Get the number of rules to select per subset
   # average number of decisions per subset
-  pall <- mean(sapply(res, function(x){return(x$pdecisions)} ))
+  pall <- mean(sapply(rules, function(x){return(x$pdecisions)} ))
   qsubset <- sqrt((2*pi_thr-1)*alpha_error*pall)
   if (qsubset < 1){qsubset <- 1} # if less than a decision should be selected, take at least one
   cat(qsubset, ' rules per sub-sample selected. ')
   # save the parameters for later
-  agg_res$parameters <- c('pi_thr' = length(res)*pi_thr, 'alpha_error' = alpha_error, 'q' = qsubset)
+  agg_res$parameters <- c('pi_thr' = length(rules)*pi_thr, 'alpha_error' = alpha_error, 'q' = qsubset)
 
   # Create a data.frame with intersection of rules
-  rules_agg <- lapply(res, function(x, qsubset){setorder(x$rules, -imp);return(x$rules[1:qsubset,])}, qsubset=qsubset )
+  rules_agg <- lapply(rules, function(x, qsubset){setorder(x$rules, -imp);return(x$rules[1:qsubset,])}, qsubset=qsubset )
   rules_agg <- do.call(what = rbind, rules_agg)
   rules_agg <- rules_agg[,.(len,support,err,condition, pred, imp, n)]
   
@@ -47,21 +47,21 @@ stabilitySelection <- function(res, alpha_error = 1, pi_thr = 0.7, aggregate_tax
   agg_res$rules_summary <- rules_summary
 
   # subset decisions to get the most stable ones
-  final_decisions <- rules_summary[inN >= length(res)*pi_thr, (condition)]
+  final_decisions <- rules_summary[inN >= length(rules)*pi_thr, (condition)]
   if (length(final_decisions) == 0){
     warning("No stable decision ensemble could be reached: try increasing alpha.")
     return(agg_res)
   }
-  cat(nrow(subset(rules_summary, inN >= length(res)*pi_thr)), 'decisions in >=', length(res)*pi_thr, 'subsets.\n')
+  cat(nrow(subset(rules_summary, inN >= length(rules)*pi_thr)), 'decisions in >=', length(rules)*pi_thr, 'subsets.\n')
 
 
   # get all edges
-  edges_agg <- lapply(res, function(x){return(x$edges_agg)} )
+  edges_agg <- lapply(rules, function(x){return(x$edges_agg)} )
   edges_agg <- do.call(what = rbind, edges_agg)
   agg_res$edges_agg <- copy(edges_agg)
   
   # get all nodes
-  nodes_agg <- lapply(res, function(x){return(x$nodes_agg)} )
+  nodes_agg <- lapply(rules, function(x){return(x$nodes_agg)} )
   nodes_agg <- do.call(what = rbind, nodes_agg)
   agg_res$nodes_agg <- copy(nodes_agg)
 
