@@ -4,11 +4,10 @@
 #' It uses the ggpubr package to combine plots.
 #' 
 #' @param decision_ensemble stable decision ensemble (see stabilitySelection).
-#' @param pi_thr pi threshold to subset decisions according to their probability of being selected
 #' @param levels_order optional, order for variables levels on the influence plot 
 #' @return 2 ggplots arranged in a row with ggpubr.
 #' @export
-plotFeatures <- function(decision_ensemble, pi_thr, levels_order = NULL){
+plotFeatures <- function(decision_ensemble, levels_order = NULL){
 	
 ### Make the feature importance plot
 # Get importances across levels
