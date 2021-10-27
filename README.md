@@ -27,7 +27,7 @@ Before: select and fit a machine learning model (regression or classification)
 	- without bootstrapping, opt. in parallel, with `model2DE()`
 	- with bootstrapping, opt. in parallel, with `model2DE_resampling()`
 	- with boostrapping each ran in parallel (recommended): `preCluster()` followed by `model2DE_cluster()` iterated on partitions in the `Q()` function of the clusterMQ R-package
-2. If bootstrapping, perform **stability selection**: `stabilitySelection()`
+2. If bootstrapping, perform **stability selection**: `stabilitySelection()`. Alternatively, use `evaluateAlpha()` to perform stability selection with various values of `alpha()` and pick the decision ensemble that can predict as many samples as possible for the lowest `alpha`.
 3. Plot results with `plotFeatures()` and `plotNetwork()` (created with ggplot2, ggraph and igraph R-packages, arranged with the ggpubr R-package)
 
 

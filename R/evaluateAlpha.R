@@ -34,11 +34,15 @@ evaluateAlpha <- function(rules, alphas = c(5, 10, 15, 20, 30, 50, 75), pi_thr =
 	    tmp <- subset(tmp$rules_summary, inN >= minN)
 	    
 	    cond <- tmp$condition
-	    cond <- str_replace_all(cond, pattern = 'X', replacement = 'data')
-	    cond <- paste0('which(', cond, ')')
-	    pred_ix <- lapply(cond, function(x){eval(parse(text = x))}) %>% unlist %>% unique 
+	    if (length(cond) == 0){
+	    	check_sampl <- add_row(check_sampl, alpha = alphas[i], n_dec = 0, n_samp = 0)
+	    } else {
+	    	cond <- str_replace_all(cond, pattern = 'X', replacement = 'data')
+	    	cond <- paste0('which(', cond, ')')
+	    	pred_ix <- lapply(cond, function(x){eval(parse(text = x))}) %>% unlist %>% unique 
+	    	check_sampl <- add_row(check_sampl, alpha = alphas[i], n_dec = length(cond), n_samp = length(pred_ix))
+	    }
 	    
-	    check_sampl <- check_sampl %>% add_row(alpha = alphas[i], n_dec = length(cond), n_samp = length(pred_ix))
 	}
 	if (decision_ensembles == TRUE){
 		res[['summary_table']] <- check_sampl
