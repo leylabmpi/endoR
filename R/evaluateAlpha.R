@@ -10,19 +10,36 @@
 #' @export
 
 evaluateAlpha <- function(rules, alphas = c(5, 10, 15, 20, 30, 50, 75), pi_thr = 0.7
+			, data = NULL, decision_ensembles = TRUE
 			, aggregate_taxa = FALSE, taxa = NULL){
 
 	check_sampl <- data.frame(alpha = numeric(), n_decision = numeric(), n_samples = numeric())
+	if ('resamp' %in% names(rules)){
+		minN <- pi_thr*length(rules$resamp)
+	} else {minN <- pi_thr*length(rules)}
 
-	for (al in ){
-	    tmp <- stabilitySelection(res = rules, alpha_error = al, pi_thr = pi_thr, aggregate_taxa = aggregate_taxa, taxa = taxa)
-	    tmp <- subset(tmp$rules_summary, inN >= pi_thr*length(rules))
+	if (is.null(data) & !('data' %in% names(rules))){
+		warning("Please provide the data used to create the decision ensemble (original if not discretized, precluster$data if discretized).")
+		return()
+	}
+
+	res <- list()
+
+	for (i in 1:length(alphas)){
+	    tmp <- stabilitySelection(res = rules, alpha_error = alphas[i], pi_thr = pi_thr, aggregate_taxa = aggregate_taxa, taxa = taxa)
+	    if (decision_ensembles == TRUE){res[[alphas[i]]] <- tmp}
+
+	    tmp <- subset(tmp$rules_summary, inN >= minN)
 	    
 	    cond <- tmp$condition
-	    cond <- str_replace_all(cond, pattern = 'X', replacement = 'preclu$data')
+	    cond <- str_replace_all(cond, pattern = 'X', replacement = 'data')
 	    cond <- paste0('which(', cond, ')')
 	    pred_ix <- lapply(cond, function(x){eval(parse(text = x))}) %>% unlist %>% unique 
 	    
-	    check_sampl <- check_sampl %>% add_row(alpha = al, n_dec = length(cond), n_samp = length(pred_ix))
+	    check_sampl <- check_sampl %>% add_row(alpha = alphas[i], n_dec = length(cond), n_samp = length(pred_ix))
 	}
+	if (decision_ensembles == TRUE){
+		res[['summary_table']] <- check_sampl
+		return(res)
+	} else {return(check_sampl)}
 }
