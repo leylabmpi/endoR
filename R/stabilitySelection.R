@@ -5,21 +5,27 @@
 #' The decision importances and multiplicities are averaged across bootstraps. Decision-wise feature and interaction importances and influences are averaged across bootstraps before computing the feature and interaction importances and influences from the stable decision ensemble.
 #' @param res list of bootstrap results
 #' @param alpha_error expected number of false positive decision selected (default = 1).
-#' @param minN fraction of bootstraps in which a decision should have been selected in to be included in the stable decision ensemble (default = 0.7).
+#' @param pi_thr fraction of bootstraps in which a decision should have been selected in to be included in the stable decision ensemble (default = 0.7).
+#' @param aggregate_taxa should taxa be aggregated at the genus level (if species have lower importance than their genus) or species level (if a genus is represented by a unique species)
+#' @param taxa if aggregate_taxa = TRUE, a data.frame with all taxa included in the dataset: columns = taxonomic ranks (with columns f, g, and s)
 #' @return A list with all decisions from all bootstrasps, the summary of decisions across bootstraps, the feature and interaction importance and influence in the nodes and edges dataframes, as well as the the decision-wise feature and interaction importances and influences the nodes_agg and edges_agg dataframes.
 #' @export
-stabilitySelection <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE, taxa = NULL){
+stabilitySelection <- function(res, alpha_error = 1, pi_thr = 0.7, aggregate_taxa = FALSE, taxa = NULL){
 
   agg_res <- list()
   on.exit(return(agg_res), add = TRUE, after = TRUE)
+
+  # if endoR has not been ran on the cluster, the bootstraps are in 'resamp'
+  if ('resamp' %in% names(res)){rules <- rules$resamp}
     
   # Get the number of rules to select per subset
   # average number of decisions per subset
   pall <- mean(sapply(res, function(x){return(x$pdecisions)} ))
-  qsubset <- sqrt((2*minN-1)*alpha_error*pall)
+  qsubset <- sqrt((2*pi_thr-1)*alpha_error*pall)
   if (qsubset < 1){qsubset <- 1} # if less than a decision should be selected, take at least one
   cat(qsubset, ' rules per sub-sample selected. ')
-  agg_res$parameters <- c('minN' = length(res)*minN, 'alpha_error' = alpha_error, 'q' = qsubset)
+  # save the parameters for later
+  agg_res$parameters <- c('pi_thr' = length(res)*pi_thr, 'alpha_error' = alpha_error, 'q' = qsubset)
 
   # Create a data.frame with intersection of rules
   rules_agg <- lapply(res, function(x, qsubset){setorder(x$rules, -imp);return(x$rules[1:qsubset,])}, qsubset=qsubset )
@@ -41,8 +47,13 @@ stabilitySelection <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa 
   agg_res$rules_summary <- rules_summary
 
   # subset decisions to get the most stable ones
-  cat(nrow(subset(rules_summary, inN >= length(res)*minN)), 'decisions in >=', length(res)*minN, 'subsets.\n')
-  final_decisions <- rules_summary[inN >= length(res)*minN, (condition)]
+  final_decisions <- rules_summary[inN >= length(res)*pi_thr, (condition)]
+  if (length(final_decisions) == 0){
+    warning("No stable decision ensemble could be reached: try increasing alpha.")
+    return(agg_res)
+  }
+  cat(nrow(subset(rules_summary, inN >= length(res)*pi_thr)), 'decisions in >=', length(res)*pi_thr, 'subsets.\n')
+
 
   # get all edges
   edges_agg <- lapply(res, function(x){return(x$edges_agg)} )
@@ -91,7 +102,6 @@ stabilitySelection <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa 
                  , by = c('var', 'condition')]
   nodes <- merge(nodes, rules_summary[,.(condition, imp, n, len)], all.x = TRUE, by = 'condition')[
                , .(importance = sum(importance*imp*n)
-                   , wParticipation = sum(importance*imp*n)/sum(imp*n) 
                    , influence = sum(influence*imp*n)/sum(imp*n) ), by = var]
   
   # summary edges
@@ -99,7 +109,7 @@ stabilitySelection <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa 
                      , association_sign = mean(d.x*d.y) )
                  , by = c('x', 'y', 'condition')]
   edges <- merge(edges, rules_summary[,.(condition, imp, n, len)], all.x = TRUE, by = 'condition')[
-               , .(importance = sum(importance*imp*n), wParticipation = sum(importance*imp*n)/sum(imp*n)
+               , .(importance = sum(importance*imp*n)
                    , influence = sum(influence*imp*n)/sum(imp*n)
                    , association_sign = sum(association_sign*imp*n)/sum(imp*n) ) 
                    , by = c('x', 'y')][,'d_assoc':= as.character(sign(association_sign))]

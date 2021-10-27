@@ -1,5 +1,5 @@
 #'@export
-postCluster <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE, taxa = NULL){
+postCluster <- function(res, alpha_error = 1, pi_thr = 0.7, aggregate_taxa = FALSE, taxa = NULL){
 
   agg_res <- list()
   on.exit(return(agg_res), add = TRUE, after = TRUE)
@@ -7,7 +7,7 @@ postCluster <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE
   # Get the number of rules to select per subset
   # average number of decisions per subset
   pall <- mean(sapply(res, function(x){return(x$pdecisions)} ))
-  qsubset <- sqrt((2*minN-1)*alpha_error*pall)
+  qsubset <- sqrt((2*pi_thr-1)*alpha_error*pall)
   if (qsubset < 1){qsubset <- 1} # if less than a decision should be selected, take at least one
   cat(qsubset, ' rules per sub-sample selected. ')
 
@@ -31,12 +31,12 @@ postCluster <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE
   agg_res$rules_summary <- rules_summary
 
   # subset decisions to get the most stable ones
-  final_decisions <- rules_summary[inN >= length(res)*minN, (condition)]
+  final_decisions <- rules_summary[inN >= length(res)*pi_thr, (condition)]
   if (length(final_decisions) == 0){
     warning("No stable decision ensemble could be reached: try increasing alpha.")
     return(agg_res)
   }
-  cat(nrow(subset(rules_summary, inN >= length(res)*minN)), 'decisions in >=', length(res)*minN, 'subsets.\n')
+  cat(nrow(subset(rules_summary, inN >= length(res)*pi_thr)), 'decisions in >=', length(res)*pi_thr, 'subsets.\n')
 
 
   # get all edges
@@ -86,7 +86,6 @@ postCluster <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE
                  , by = c('var', 'condition')]
   nodes <- merge(nodes, rules_summary[,.(condition, imp, n, len)], all.x = TRUE, by = 'condition')[
                , .(importance = sum(importance*imp*n)
-                   , wParticipation = sum(importance*imp*n)/sum(imp*n)
                    , influence = sum(influence*imp*n)/sum(imp*n) ), by = var]
 
   # summary edges
@@ -94,7 +93,7 @@ postCluster <- function(res, alpha_error = 1, minN = 0.7, aggregate_taxa = FALSE
                      , association_sign = mean(d.x*d.y) )
                  , by = c('x', 'y', 'condition')]
   edges <- merge(edges, rules_summary[,.(condition, imp, n, len)], all.x = TRUE, by = 'condition')[
-               , .(importance = sum(importance*imp*n), wParticipation = sum(importance*imp*n)/sum(imp*n)
+               , .(importance = sum(importance*imp*n)
                    , influence = sum(influence*imp*n)/sum(imp*n)
                    , association_sign = sum(association_sign*imp*n)/sum(imp*n) )
                    , by = c('x', 'y')][,'d_assoc':= as.character(sign(association_sign))]

@@ -21,7 +21,7 @@ model2DE_resampling <- function(
       , discretize = TRUE, K = 2, features_ctg = NULL
       , filter = TRUE, min_imp = 0.9
       #, aggregate_taxa = FALSE, taxa = NULL
-      #, alpha_error = 1, minN = 0.7
+      #, alpha_error = 1, pi_thr = 0.7
     , seed = 0, in_parallel = FALSE, n_cores = detectCores() - 1, cluster = NULL
       ){
 

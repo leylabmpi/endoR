@@ -135,7 +135,6 @@ setnames(nodes, old = 'varN', new = 'var')
 
 # Get the average per variable
 nodes_mean <- copy(nodes)[importance < 0, importance:=0][, .( importance = sum(importance*imp*n)
-                              , wParticipation = sum(importance*imp*n)/sum(imp*n)
                               , influence = sum(influence*imp*n)/sum(imp*n)
                              )
                           , by = 'var']
@@ -152,7 +151,6 @@ setnames(edges, old = 'varN', new = 'y')
 
 
 edges_mean <- copy(edges)[is.na(importance), importance:=0][, .(importance = sum(importance*imp*n)
-                              , wParticipation = sum(importance*imp*n)/sum(imp*n)
                               , influence = sum(influence*imp*n)/sum(imp*n)
                               , association_sign = sum(d.x*d.y*imp*n)/sum(imp*n) )
                               , by = c('x', 'y')][,'d_assoc':= as.character(sign(association_sign))]
