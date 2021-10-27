@@ -5,7 +5,7 @@
 #'
 #' @docType Package
 #'
-#' @author Albane Ruaud \email{albane.ruaud2tuebingen.mpg.de}
+#' @author Albane Ruaud \email{albane.ruaud@tuebingen.mpg.de}
 #'
 #' @name endoR
 #' @import data.table
