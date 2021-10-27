@@ -25,6 +25,7 @@ evaluateAlpha <- function(rules, alphas = c(5, 10, 15, 20, 30, 50, 75), pi_thr =
 	} else if ('data' %in% names(rules)) {data <- rules$data}
 
 	res <- list()
+	check_sampl <- data.frame(alpha = numeric(), n_dec = numeric(), n_samp = numeric())
 
 	for (i in 1:length(alphas)){
 	    tmp <- stabilitySelection(rules = rules, alpha_error = alphas[i], pi_thr = pi_thr, aggregate_taxa = aggregate_taxa, taxa = taxa)
