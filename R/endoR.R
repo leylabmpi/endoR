@@ -2,7 +2,6 @@
 #'
 #' endoR extracts and visualizes how predictive variables contribute to tree ensemble model accuracy.
 #'
-#'
 #' @docType Package
 #'
 #' @author Albane Ruaud \email{albane.ruaud@tuebingen.mpg.de}

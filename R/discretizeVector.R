@@ -1,41 +1,37 @@
-# modified from dicretizeVector() of the inTrees package.
-discretizeVector <-
-function(v,K=5, knames = NULL, return_all=FALSE){
+discretizeVector <- function(l_var, return_all = FALSE){
 
-  # set category names
-  if (is.null(knames) == TRUE){
-    if (K == 2){
-      knames <- c('min','Low', 'High')
-    } else if (K == 3){
-      knames <- c('min','Low', 'Medium', 'High')
-    } else if (K == 4){
-      knames <- c('min','veryLow', 'Low', 'High', 'veryHigh')
-    } else if (K == 5){
-      knames <- c('min','veryLow', 'Low','Medium', 'High', 'veryHigh')
-    } else { knames <- c("L1", paste("L",seq(1:(K-1)),sep="")) }
-  } else if (length(knames) == K){
-    knames <- c('min', knames)
-  }
-
-
-  splitV <- quantile(v, probs = seq(0, 1, 1/K), na.rm = TRUE, names = TRUE, type = 3)
-  names(splitV) <- knames
-
-  numSplit <- length(splitV)
-  if (numSplit<2){ return(v) }
-
-  newV <- vector("character", length(v))
-  newV[which(v<=splitV[2])] <- names(splitV)[2]
-
-  if(numSplit>=3){
-    for(jj in 3:numSplit){
-      newV[which(  v> splitV[jj-1] & v<=splitV[jj] )] <- names(splitV)[jj]
+    # sanity check
+    if (length(l_var$thr) == 0) return(l_var) 
+    
+    # set category names
+    numSplit <- length(l_var$thr)
+    if (numSplit == 1){
+        vNames <- c('Low', 'High')
+    } else if (numSplit == 2){
+        vNames <- c('Low', 'Medium', 'High')
+    } else if (numSplit == 3){
+        vNames <- c('Very_Low', 'Low', 'High' ,'Very_High')
+    } else if (numSplit == 4){
+        vNames <- c('Very_Low', 'Low', 'Medium', 'High' ,'Very_High')
+    } else {vNames <- as.character(1:(numSplit+1))}
+    
+    
+    newV <- rep(vNames[numSplit+1], length(l_var$var_v))
+    
+    for(j in seq(numSplit, 1, by = -1)){
+        newV[ which(l_var$var_v <= l_var$thr[j]) ] <- vNames[j]
     }
-  }
 
-  splitV <- splitV[ c('min',unique(newV)) ]
-
-  if (return_all == TRUE){
-    return(list('newV' = newV, 'splitV' = splitV[order(splitV)] ))
-  } else {return(newV)}
+   if (return_all == TRUE){
+        l_var$med <- lapply(unique(newV), function(x, l_var){
+            i <- which(newV == x)
+            return(median(l_var$var_v[i]))
+            }, l_var = l_var)
+        names(l_var$med) <- unique(newV)
+        l_var$var_d <- newV
+        return(l_var)
+    } else {
+        return(newV)
+    }
+    
 }

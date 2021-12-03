@@ -8,9 +8,7 @@
 #' @param data data to discretize.
 #' @param target response variable. 
 #' @param classPos for classification, the positive class.
-#' @param K numeric, number of categories (default: K = 2).
-#' @param features_ctg vector with variables names or column numbers to discretize. If NULL (default), then all numeric variables are discretized.
-#' @param knames optional: character vector of the same length than K, containing the ordered names for categories.
+#' @param Kmax numeric, maximal number of categories to create from numeric variables (default: K = 2).
 #' @param splitV instead of running internally discretizeData, one can provide a list with, for each variable to discretize in rules, the thresholds delimiting each new category.
 #' @param data_ctg discretized data, if splitV is passed. Necessary to re-compute the metrics (if column 'err' in rules).
 #' @param return_data if TRUE, discretized data are also returned.
@@ -22,14 +20,14 @@
 #'
 #'  @export
 discretizeDecisions <- function(rules, data = NULL, target
-                            , K = 2, features_ctg = NULL, splitV = NULL, knames = NULL
+                            , Kmax = 2, splitV = NULL
                             , classPos = NULL 
                             , in_parallel = FALSE, n_cores = detectCores() - 1, cluster = NULL){
 
     ### discretize data if needed
     if (is.null(splitV) == TRUE){
         message('Discretise data')
-        data <- discretizeData(data = data, K = K, features = features_ctg, knames = knames, return_split = TRUE)
+        data <- discretizeData(data = data, conditions = rules$condition, Kmax = Kmax, return_split = TRUE)
         splitV <- data$splitV_med
         data <- data$data_ctg
     } 
@@ -186,3 +184,4 @@ getNewRule <-  function(v, rule, splitV){
     newX <- paste0(deb, ' %in% c(', paste(ctg, collapse = ','), ')')
     return(newX)
 }
+
