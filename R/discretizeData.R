@@ -15,7 +15,7 @@ discretizeData <- function(data, conditions, Kmax = 2, return_split = FALSE){
     colNb <- names(l_var)
 
     # discretize the variable vectors
-    l_var <- lapply(l_var, discretizeVector_new, return_all = TRUE)
+    l_var <- lapply(l_var, discretizeVector, return_all = TRUE)
     names(l_var) <- colNb
     colNb <- as.integer(colNb)
 
