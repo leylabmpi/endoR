@@ -30,7 +30,7 @@ model2DE <- function(
       , dummy_var = NULL
 
       #discretization parameters
-      , discretize = FALSE, K = 2, features_ctg = NULL
+      , discretize = FALSE, Kmax = 2, features_ctg = NULL
 
       #pruning parameters
       , prune = TRUE, maxDecay = 0.05, typeDecay = 2
@@ -111,7 +111,7 @@ model2DE <- function(
     
     if (discretize == TRUE){
       exec <- discretizeDecisions(rules = exec, data = data, target=target
-                  , K = K, classPos=classPos
+                  , Kmax = Kmax, classPos=classPos
                   , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster)
 
       res$data <- exec$data_ctg

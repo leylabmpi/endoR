@@ -1,14 +1,14 @@
 #' Discretize numerical variables in decision ensemble
 #'
 #' This function replaces in a decision ensemble the boundaries of numerical features by their corresponding levels when the variable is discretized.
-#' If discretized data are not passed, data are first discretized into K categories based on their quantiles (see discretizeData). 
+#' If discretized data are not passed, data are first discretized into Kmax categories based on their quantiles (see discretizeData). 
 #' The error, prediction, importance and multiplicity of decisions are updated after discretization.
 #'
 #' @param rules a data frame with a column "condition".
 #' @param data data to discretize.
 #' @param target response variable. 
 #' @param classPos for classification, the positive class.
-#' @param Kmax numeric, maximal number of categories to create from numeric variables (default: K = 2).
+#' @param Kmax numeric, maximal number of categories to create from numeric variables (default: Kmax = 2).
 #' @param splitV instead of running internally discretizeData, one can provide a list with, for each variable to discretize in rules, the thresholds delimiting each new category.
 #' @param data_ctg discretized data, if splitV is passed. Necessary to re-compute the metrics (if column 'err' in rules).
 #' @param return_data if TRUE, discretized data are also returned.

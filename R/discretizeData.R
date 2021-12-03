@@ -1,10 +1,10 @@
 #' Discretize numerical variables in a dataset
 #'
-#' This function discretizes all numerical variables, or only the ones passed in features, into K categories based on their quantiles. 
+#' This function discretizes all numerical variables, or only the ones passed in features, into Kmax categories based on their quantiles. 
 #' Names of categories can optionally be given in knames.
 #'
 #' @param data data to discretize.
-#' @param Kmax numeric, maximal number of categories for each variable (default: K = 2).
+#' @param Kmax numeric, maximal number of categories for each variable (default: Kmax = 2).
 #' @param return_split if TRUE, then the table with thresholds used to discretize data is also returned.
 #' @return Data with discretized variables.
 #' @export

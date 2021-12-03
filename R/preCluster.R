@@ -24,7 +24,7 @@ preCluster <- function(
     model, model_type, data, target
     , times = 10, p = .5, sample_weight = NULL, classPos = NULL
     , ntree = 'all', maxdepth = Inf, dummy_var = NULL
-    , discretize = FALSE, K = 2
+    , discretize = FALSE, Kmax = 2
     , seed = 0
     , in_parallel = FALSE, n_cores = detectCores() - 1
 ){
