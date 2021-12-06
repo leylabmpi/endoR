@@ -13,7 +13,7 @@
 #' @param sample_weight numeric vector with the weights of samples for bootstrap resampling. For classification, if 2 values are given, the 1st one is assumed to be for the positive class (classpos argument).
 #' @param ntree number of trees to use from the model (default = all)
 #' @param maxdepth maximal node depth to use for extracting rules (by default, full branches are used).
-#' @param discretize if TRUE, discretization is performed with Kmax (discretizeDecisions, by default = FALSE).
+#' @param discretize if TRUE, discretization is performed with K categories (discretizeDecisions, by default = FALSE).
 #' @param in_parallel if TRUE, the function is run in parallel.
 #' @param n_cores if in_parallel = TRUE, and no cluster has been passed: number of cores to use.
 #' @param cluster the cluster to use to run the function in parallel.
@@ -24,7 +24,7 @@ preCluster <- function(
     model, model_type, data, target
     , times = 10, p = .5, sample_weight = NULL, classPos = NULL
     , ntree = 'all', maxdepth = Inf, dummy_var = NULL
-    , discretize = FALSE, Kmax = 2
+    , discretize = FALSE, K = 2
     , seed = 0
     , in_parallel = FALSE, n_cores = detectCores() - 1
 ){
@@ -83,7 +83,7 @@ preCluster <- function(
 
   if (discretize == TRUE){
     exec <- discretizeDecisions(rules = exec, data = data, target=target
-                  , Kmax = Kmax, classPos=classPos
+                  , K = K, classPos=classPos
                   , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster)
 
     res$data <- exec$data_ctg

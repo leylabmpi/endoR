@@ -9,7 +9,7 @@
 #' @param target response variable. 
 #' @param classPos for classification, the positive class.
 #' @param mode whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').
-#' @param Kmax numeric, maximal number of categories to create from numeric variables (default: Kmax = 2).
+#' @param K numeric, number of categories to create from numeric variables (default: K = 2).
 #' @param splitV instead of running internally discretizeData, one can provide a list with, for each variable to discretize in rules, the thresholds delimiting each new category.
 #' @param data_ctg discretized data, if splitV is passed. Necessary to re-compute the metrics (if column 'err' in rules).
 #' @param return_data if TRUE, discretized data are also returned.
@@ -21,7 +21,7 @@
 #'
 #'  @export
 discretizeDecisions <- function(rules, data = NULL, target, mode = 'data'
-                            , Kmax = 2, splitV = NULL
+                            , K = 2, splitV = NULL
                             , classPos = NULL 
                             , in_parallel = FALSE, n_cores = detectCores() - 1, cluster = NULL){
 
