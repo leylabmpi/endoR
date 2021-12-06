@@ -6,7 +6,7 @@
 \usage{
 plotNetwork(
   decision_ensemble,
-  n_edges = NULL,
+  path_length = Inf,
   layout = "stress",
   colour_edge_low = "#E69F00",
   colour_edge_mid = "grey87",
@@ -15,20 +15,20 @@ plotNetwork(
   colour_node_mid = "grey87",
   colour_node_high = "#0072B2",
   text_size = 4,
-  hide_nodes = 0,
+  hide_isolated_nodes = TRUE,
   seed = 0
 )
 }
 \arguments{
 \item{decision_ensemble}{stable decision ensemble: list with edges, nodes, etc.}
 
-\item{n_edges}{number of edges to plot; if NULL, all edges are plotted (default).}
+\item{path_length}{maximal number of edges between 2 nodes, default = Inf.}
 
 \item{layout}{network layout, default is 'stress' (see ggraph package)}
 
 \item{text_size}{size of node labels.}
 
-\item{hide_nodes}{numeric, the minimal connectivity of a node. If negative, all nodes are plotted.}
+\item{hide_isolated_nodes}{logical, default = TRUE (= nodes without any edge are not shown).}
 
 \item{seed}{the seed to use for generating the network.}
 

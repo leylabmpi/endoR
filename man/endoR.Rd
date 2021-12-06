@@ -8,5 +8,5 @@
 endoR extracts and visualizes how predictive variables contribute to tree ensemble model accuracy.
 }
 \author{
-Albane Ruaud \email{albane.ruaud2tuebingen.mpg.de}
+Albane Ruaud \email{albane.ruaud@tuebingen.mpg.de}
 }

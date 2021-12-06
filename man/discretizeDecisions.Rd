@@ -8,6 +8,7 @@ discretizeDecisions(
   rules,
   data = NULL,
   target,
+  mode = "data",
   Kmax = 2,
   splitV = NULL,
   classPos = NULL,
@@ -23,7 +24,9 @@ discretizeDecisions(
 
 \item{target}{response variable.}
 
-\item{Kmax}{numeric, maximal number of categories to create from numeric variables (default: K = 2).}
+\item{mode}{whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').}
+
+\item{Kmax}{numeric, maximal number of categories to create from numeric variables (default: Kmax = 2).}
 
 \item{splitV}{instead of running internally discretizeData, one can provide a list with, for each variable to discretize in rules, the thresholds delimiting each new category.}
 
@@ -45,6 +48,6 @@ discretizeDecisions(
 }
 \description{
 This function replaces in a decision ensemble the boundaries of numerical features by their corresponding levels when the variable is discretized.
-If discretized data are not passed, data are first discretized into K categories based on their quantiles (see discretizeData). 
+If discretized data are not passed, data are first discretized into Kmax categories based on their quantiles (see discretizeData). 
 The error, prediction, importance and multiplicity of decisions are updated after discretization.
 }

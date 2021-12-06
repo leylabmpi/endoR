@@ -14,7 +14,7 @@ model2DE(
   classPos = NULL,
   dummy_var = NULL,
   discretize = FALSE,
-  K = 2,
+  Kmax = 2,
   features_ctg = NULL,
   prune = TRUE,
   maxDecay = 0.05,

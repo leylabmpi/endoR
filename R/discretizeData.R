@@ -1,3 +1,6 @@
+#' Discretize numerical variables in a dataset
+#'
+#' This function discretizes all numerical variables, or only the ones passed in features, into K categories based on their quantiles.
 #' Names of categories can optionally be given in knames.
 #'
 #' @param data data to discretize.
@@ -56,8 +59,10 @@ discretizeData <- function(data, K = 2, features = NULL, knames = NULL, return_s
         names(splitV_med)<- names(splitV)
 
         return(list('data_ctg' = data_ctg, 'splitV' = splitV, 'splitV_med' = splitV_med))
-}
+    }
 
+    return(data_ctg)
+}
 
 
 ##############
