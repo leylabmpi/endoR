@@ -8,6 +8,7 @@
 #' @param data data to discretize.
 #' @param target response variable. 
 #' @param classPos for classification, the positive class.
+#' @param mode whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').
 #' @param Kmax numeric, maximal number of categories to create from numeric variables (default: Kmax = 2).
 #' @param splitV instead of running internally discretizeData, one can provide a list with, for each variable to discretize in rules, the thresholds delimiting each new category.
 #' @param data_ctg discretized data, if splitV is passed. Necessary to re-compute the metrics (if column 'err' in rules).
@@ -19,7 +20,7 @@
 #'  @return Decision ensemble with discretized variables in the condition. Decisions with the same condition are aggregated: their importances are summed, and all other metrics are averaged.
 #'
 #'  @export
-discretizeDecisions <- function(rules, data = NULL, target
+discretizeDecisions <- function(rules, data = NULL, target, mode = 'data'
                             , Kmax = 2, splitV = NULL
                             , classPos = NULL 
                             , in_parallel = FALSE, n_cores = detectCores() - 1, cluster = NULL){
@@ -27,7 +28,11 @@ discretizeDecisions <- function(rules, data = NULL, target
     ### discretize data if needed
     if (is.null(splitV) == TRUE){
         message('Discretise data')
-        data <- discretizeData(data = data, conditions = rules$condition, Kmax = Kmax, return_split = TRUE)
+        if (mode == 'model'){
+            data <- discretizeData_model(data = data, conditions = rules$condition, Kmax = K, return_split = TRUE)
+        } else {
+            data <- discretizeData(data = data, conditions = rules$condition, K = K, return_split = TRUE)
+        }
         splitV <- data$splitV_med
         data <- data$data_ctg
     } 

@@ -8,10 +8,8 @@ discretizeDecisions(
   rules,
   data = NULL,
   target,
-  K = 2,
-  features_ctg = NULL,
+  Kmax = 2,
   splitV = NULL,
-  knames = NULL,
   classPos = NULL,
   in_parallel = FALSE,
   n_cores = detectCores() - 1,
@@ -25,13 +23,9 @@ discretizeDecisions(
 
 \item{target}{response variable.}
 
-\item{K}{numeric, number of categories (default: K = 2).}
-
-\item{features_ctg}{vector with variables names or column numbers to discretize. If NULL (default), then all numeric variables are discretized.}
+\item{Kmax}{numeric, maximal number of categories to create from numeric variables (default: K = 2).}
 
 \item{splitV}{instead of running internally discretizeData, one can provide a list with, for each variable to discretize in rules, the thresholds delimiting each new category.}
-
-\item{knames}{optional: character vector of the same length than K, containing the ordered names for categories.}
 
 \item{classPos}{for classification, the positive class.}
 

@@ -4,17 +4,24 @@
 \alias{plotFeatures}
 \title{Plot the importance and influence of features.}
 \usage{
-plotFeatures(decision_ensemble, pi_thr, levels_order = NULL)
+plotFeatures(
+  decision_ensemble,
+  levels_order = NULL,
+  colour_low = "#E69F00",
+  colour_mid = "grey87",
+  colour_high = "#0072B2",
+  return_all = FALSE
+)
 }
 \arguments{
 \item{decision_ensemble}{stable decision ensemble (see stabilitySelection).}
 
-\item{pi_thr}{pi threshold to subset decisions according to their probability of being selected}
-
 \item{levels_order}{optional, order for variables levels on the influence plot}
+
+\item{return_all}{TRUE, returns the table of feature importance and influences and each plot separated (default = FALSE).}
 }
 \value{
-2 ggplots arranged in a row with ggpubr.
+2 ggplots arranged in a row with ggpubr; if return_all = TRUE, returns plots separately in a list , as well as the tables used to create plots.
 }
 \description{
 Returns a ggplot object with variables importance (across all categorical levels for factor variables) and variable per-level influence. 

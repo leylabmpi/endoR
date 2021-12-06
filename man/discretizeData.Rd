@@ -4,22 +4,12 @@
 \alias{discretizeData}
 \title{Discretize numerical variables in a dataset}
 \usage{
-discretizeData(
-  data,
-  K = 2,
-  features = NULL,
-  knames = NULL,
-  return_split = FALSE
-)
+discretizeData(data, conditions, Kmax = 2, return_split = FALSE)
 }
 \arguments{
 \item{data}{data to discretize.}
 
-\item{K}{numeric, number of categories (default: K = 2).}
-
-\item{features}{vector with variables names or column numbers to discretize. If NULL (default), then all numeric variables are discretized.}
-
-\item{knames}{optional: character vector of the same length than K, containing the ordered names for categories.}
+\item{Kmax}{numeric, maximal number of categories for each variable (default: K = 2).}
 
 \item{return_split}{if TRUE, then the table with thresholds used to discretize data is also returned.}
 }

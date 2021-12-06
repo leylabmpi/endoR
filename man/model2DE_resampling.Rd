@@ -12,7 +12,7 @@ model2DE_resampling(
   classPos = NULL,
   times = 10,
   p = 0.5,
-  sample_weight = sample_weight,
+  sample_weight = NULL,
   ntree = "all",
   maxdepth = Inf,
   dummy_var = NULL,
