@@ -30,7 +30,7 @@ model2DE_resampling <- function(
 tmp <- preCluster(model = model, model_type=model_type, data=data, target=target
                   , times = times, p = p, sample_weight = sample_weight, classPos = classPos
                   , ntree = ntree, maxdepth = maxdepth, dummy_var = dummy_var
-                  , discretize = discretize, K = K, features_ctg = features_ctg
+                  , discretize = discretize, K = K
                   , seed = seed
                   , in_parallel = in_parallel, n_cores = n_cores)
 exec <- tmp$exec
