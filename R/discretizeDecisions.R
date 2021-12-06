@@ -31,7 +31,7 @@ discretizeDecisions <- function(rules, data = NULL, target, mode = 'data'
         if (mode == 'model'){
             data <- discretizeData_model(data = data, conditions = rules$condition, Kmax = K, return_split = TRUE)
         } else {
-            data <- discretizeData(data = data, conditions = rules$condition, K = K, return_split = TRUE)
+            data <- discretizeData(data = data, K = K, return_split = TRUE)
         }
         splitV <- data$splitV_med
         data <- data$data_ctg
