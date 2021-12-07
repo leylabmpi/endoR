@@ -24,7 +24,7 @@ preCluster <- function(
     model, model_type, data, target
     , times = 10, p = .5, sample_weight = NULL, classPos = NULL
     , ntree = 'all', maxdepth = Inf, dummy_var = NULL
-    , discretize = FALSE, K = 2
+    , discretize = FALSE, K = 2, mode = 'data'
     , seed = 0
     , in_parallel = FALSE, n_cores = detectCores() - 1
 ){
@@ -83,7 +83,7 @@ preCluster <- function(
 
   if (discretize == TRUE){
     exec <- discretizeDecisions(rules = exec, data = data, target=target
-                  , K = K, classPos=classPos
+                  , K = K, classPos=classPos, mode = mode
                   , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster)
 
     res$data <- exec$data_ctg

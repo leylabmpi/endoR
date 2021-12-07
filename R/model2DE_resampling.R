@@ -18,7 +18,7 @@ model2DE_resampling <- function(
       , ntree = 'all', maxdepth = Inf
       , dummy_var = NULL
       , prune = TRUE, maxDecay = 0.05, typeDecay = 2
-      , discretize = TRUE, K = 2, features_ctg = NULL
+      , discretize = TRUE, K = 2, mode = 'data'
       , filter = TRUE, min_imp = 0.9
       #, aggregate_taxa = FALSE, taxa = NULL
       #, alpha_error = 1, pi_thr = 0.7
@@ -30,7 +30,7 @@ model2DE_resampling <- function(
 tmp <- preCluster(model = model, model_type=model_type, data=data, target=target
                   , times = times, p = p, sample_weight = sample_weight, classPos = classPos
                   , ntree = ntree, maxdepth = maxdepth, dummy_var = dummy_var
-                  , discretize = discretize, K = K
+                  , discretize = discretize, K = K, mode = mode
                   , seed = seed
                   , in_parallel = in_parallel, n_cores = n_cores)
 exec <- tmp$exec
@@ -54,9 +54,14 @@ for (ix in partitions){
                       , filter = filter
                       , in_parallel = in_parallel, n_cores = n_cores
                       , light = TRUE)
+    
+    # get the decisions: depends on options so we'll just take whatever was produced before getting nodes!
+    i_rules <- which(names(res) == 'nodes')-1
+
     res <- list('pdecisions' = res$n_decisions
-                , 'rules' = res[[length(res)-4]]
+                , 'rules' = res[[i_rules]]
                 , 'nodes_agg' = res$nodes_agg, 'edges_agg' = res$edges_agg)
+    
     resamp[[k]] <- res
     k <- k+1
 }

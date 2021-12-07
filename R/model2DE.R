@@ -30,7 +30,7 @@ model2DE <- function(
       , dummy_var = NULL
 
       #discretization parameters
-      , discretize = FALSE, K = 2
+      , discretize = FALSE, K = 2, mode = 'data'
 
       #pruning parameters
       , prune = TRUE, maxDecay = 0.05, typeDecay = 2
@@ -111,7 +111,7 @@ model2DE <- function(
     
     if (discretize == TRUE){
       exec <- discretizeDecisions(rules = exec, data = data, target=target
-                  , K = K, classPos=classPos
+                  , K = K, classPos=classPos, mode = mode
                   , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster)
 
       res$data <- exec$data_ctg
@@ -179,11 +179,11 @@ model2DE <- function(
                     , aggregate_taxa = aggregate_taxa, taxa = taxa, type = type
                     , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster)
   if (aggregate_taxa == TRUE){res$newFeatures <- coocc$newFeatures}
-  res$edges <- coocc$edges
   res$nodes <- coocc$nodes
-  res$edges_agg <- coocc$edges_agg
+  res$edges <- coocc$edges
   res$nodes_agg <- coocc$nodes_agg
-
+  res$edges_agg <- coocc$edges_agg
+  
   return(res)
 
 }
