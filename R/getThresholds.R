@@ -13,7 +13,13 @@ getThresholds <- function(conditions, data, Kmax = 2){
 
 	# and now transform to a list 
 	var_split <- lapply(sort(unique(var_cond$var))
-	                    , function(x, var_cond){unlist(subset(var_cond, var == x, select = thr))},var_cond = var_cond)
+	                    , function(x, var_cond, data){
+	                    	thr <- unlist(subset(var_cond, var == x, select = thr))
+	                    	var_v <- data[[x]]
+	                    	thr[thr < min(var_v)] <- min(var_v)
+	                    	thr[thr > max(var_v)] <- max(var_v)
+	                    	return(thr)
+	                    },var_cond = var_cond, data = data)
 	names(var_split) <- as.character(sort(unique(var_cond$var)))
 
 	# remove non-numeric variables
@@ -35,7 +41,7 @@ getThresholds <- function(conditions, data, Kmax = 2){
                                                 )}, data = data, thr = new_thr)
 
     new_thr <- lapply(new_thr, function(x){ 
-    	x$thr <- x$thr[ x$thr > min(x$var_v) & x$thr < max(x$var_v)] 
+    	x$thr <- x$thr[ x$thr >= min(x$var_v) & x$thr <= max(x$var_v)] 
     	if (length( x$thr ) == 0) x$thr <- min(x$var_v)
     	return(x)
     	})
