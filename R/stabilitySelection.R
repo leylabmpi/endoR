@@ -28,7 +28,7 @@ stabilitySelection <- function(rules, alpha_error = 1, pi_thr = 0.7, aggregate_t
   agg_res$parameters <- c('pi_thr' = length(rules)*pi_thr, 'alpha_error' = alpha_error, 'q' = qsubset)
 
   # Create a data.frame with intersection of rules
-  rules_agg <- lapply(rules, function(x, qsubset){setorder(x$rules, -imp);return(x$rules[1:min(qsubset, nrow(x$rules)),])}, qsubset=qsubset )
+  rules_agg <- lapply(rules, function(x, qsubset){setorder(x$rules, -imp*n);return(x$rules[1:min(qsubset, nrow(x$rules)),])}, qsubset=qsubset )
   rules_agg <- do.call(what = rbind, rules_agg)
   rules_agg <- rules_agg[,.(len,support,err,condition, pred, imp, n)]
   
