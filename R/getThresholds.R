@@ -55,7 +55,7 @@ getThresholds <- function(conditions, data, Kmax = 2){
 
 getMode <- function(x){
 	if (length(x) == 1){
-		return(x)
+		return(as.numeric(x))
 	} else{
 		tmp <- density(x)
 		return(tmp$x[which.max(tmp$y)])
@@ -69,7 +69,7 @@ getModes_all <- function(var){
     # (I just removed the unecessary bits..)
     
     if (length(x) == 1){
-		return(x)
+		return(as.numeric(x))
 	}
 	
     x <- as.vector(density(var)$y)
