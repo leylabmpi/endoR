@@ -54,8 +54,12 @@ getThresholds <- function(conditions, data, Kmax = 2){
 ##########
 
 getMode <- function(x){
-	tmp <- density(x)
-	tmp$x[which.max(tmp$y)]
+	if (length(x) == 1){
+		return(x)
+	} else{
+		tmp <- density(x)
+		return(tmp$x[which.max(tmp$y)])
+	}
 }
 
 
@@ -64,6 +68,10 @@ getModes_all <- function(var){
     # https://github.com/phgrosjean/pastecs/blob/master/R/turnpoints.R
     # (I just removed the unecessary bits..)
     
+    if (length(x) == 1){
+		return(x)
+	}
+	
     x <- as.vector(density(var)$y)
     n <- length(x)
     diffs <- c(x[1] - 1, x[1:(n - 1)]) != x
