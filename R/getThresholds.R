@@ -23,8 +23,9 @@ getThresholds <- function(conditions, data, Kmax = 2){
 	names(var_split) <- as.character(sort(unique(var_cond$var)))
 
 	# remove non-numeric variables
-	non_num <- sapply(data, function(x){length(unique(x))>2})
-	var_split <- var_split[non_num]
+	are_num <- as.character(which(sapply(dummies, function(x){length(unique(x))>2})))
+	are_num <- are_num[are_num %in% names(var_split)]
+	var_split <- var_split[are_num]
 
 	# get thresholds for discretization
 	if (Kmax == 2){
@@ -55,7 +56,7 @@ getThresholds <- function(conditions, data, Kmax = 2){
 
 getMode <- function(x){
 	if (length(x) == 1){
-		return(as.numeric(x))
+		return(x)
 	} else{
 		tmp <- density(x)
 		return(tmp$x[which.max(tmp$y)])
@@ -69,7 +70,7 @@ getModes_all <- function(var){
     # (I just removed the unecessary bits..)
     
     if (length(x) == 1){
-		return(as.numeric(x))
+		return(x)
 	}
 	
     x <- as.vector(density(var)$y)
