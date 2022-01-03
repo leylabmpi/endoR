@@ -2,6 +2,7 @@
 
 export(Ranger2List_endoR)
 export(aggregateTaxa)
+export(changeDecisionsDummies)
 export(compatibleNames)
 export(decisionImportance)
 export(decisions2FullDummy)

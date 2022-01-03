@@ -1,4 +1,5 @@
 # takes decisions and modifies them so that only one level of a multiclass variable is used in decisions
+#’ @export
 changeDecisionsDummies <- function(rules, dummy_var, data, target, classPos = NULL
                                , in_parallel = FALSE, n_cores = detectCores() - 1, cluster = NULL){
 
