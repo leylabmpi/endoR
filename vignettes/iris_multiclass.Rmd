@@ -1,0 +1,62 @@
+---
+title: "Iris multiclass"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{endoR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette illustrates how to interpret multiclass models with endoR. We will use the iris data for this purpose.
+
+# Preambule
+```{r setup}
+library(endoR)
+library(randomForest)
+library(tidyverse)
+library(caret)
+library(ggpubr)
+library(ggraph)
+```
+
+# Data
+```{r}
+data(iris)
+summary(iris)
+```
+
+# Fit model
+```{r}
+set.seed(1313)
+mod <- randomForest(Species ~ ., data = iris)
+mod
+```
+
+# Fit endoR for the "setosa" species
+```{r}
+#> We will only prune and discretize decisions in 3 levels.
+endo_setosa <- model2DE(model = mod, model_type = 'rf', data = select(iris, -Species), target = iris$Species
+                 , classPos = 'setosa', filter = FALSE, K = 3, discretize = TRUE)
+#> Plants from the setosa species have small petal and narrow long sepals. 
+plotFeatures(endo_setosa, levels_order = c('Low', 'Medium', 'High'))
+plotNetwork(endo_setosa, hide_isolated_nodes = FALSE, layout = 'fr')
+```
+
+# Fit endoR for the "versicolor" species
+```{r}
+#> This time we will filter decisions based on their importance to trim the network (filter = TRUE), we will use min_imp = 0.5 to keep at least all decisions with an importance > 0.5*the best importance (the lower min_imp, the slighter the filtering).
+endo_versicolor <- model2DE(model = mod, model_type = 'rf', data = select(iris, -Species), target = iris$Species
+                 , classPos = 'versicolor', K = 3, discretize = TRUE, filter = TRUE, min_imp = 0.5)
+
+#> The petal's proportions are intermediary compared to the setosa and virginica species. Sepals have a narrow-intermediary width and long-intermediary length (= if wide and small then it's not a versicolor, as seen on the network).
+plotFeatures(endo_versicolor, levels_order = c('Low', 'Medium', 'High'))
+plotNetwork(endo_versicolor, hide_isolated_nodes = FALSE, layout = 'fr', path_length = 3)+
+  scale_edge_alpha(range = c(0.8,1))
+```

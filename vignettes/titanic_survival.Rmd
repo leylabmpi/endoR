@@ -1,5 +1,5 @@
 ---
-title: "endoR"
+title: "Titanic survival"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{endoR}
@@ -14,8 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette illustrates how to apply endoR to a random forest model. For this, we will use the titanic dataset (copied from the `DALEX` R-package): the survival, or not, of passengers of the RMS Titanic will be predicted using the age, gender, number of siblings, etc. We will just fit a model and apply endoR to it.
-
+This vignette illustrates how to apply endoR to a random forest model. For this, we will use the titanic dataset (copied from the `DALEX` R-package that has already arranged it!): the survival of passengers of the RMS Titanic will be predicted using the age, gender, number of siblings, etc. We will just fit a random forest model and apply endoR to it. 
 
 # Preambule
 ```{r setup}
@@ -30,6 +29,9 @@ library(data.table)
 # Data
 ```{r}
 data("titanic")
+head(titanic)
+dim(titanic)
+class(titanic)
 ```
 
 # Fit model
