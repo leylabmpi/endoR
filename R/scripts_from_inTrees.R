@@ -25,6 +25,12 @@ function(tree,rowIx,count,ruleSet,rule,levelX,length,max_length){ ###
      if(as.character(xIx) %in% ls(ruleleft)) {
           if(!is.null(levelX[[xIx]])){    
             lValue <- intersect(ruleleft[[as.character(xIx)]],lValue)
+            # here this may be empty -> we stop here
+            if (length(lValue) == 0){
+                count <- count + 1
+                ruleSet[[count]] <- rule
+                return(list(ruleSet = ruleSet, count=count))
+            }
             ruleleft[[as.character(xIx)]] <- lValue
           } else {
             ruleleft[[as.character(xIx)]] <- paste(ruleleft[[as.character(xIx)]], "&", lValue)
@@ -42,6 +48,12 @@ function(tree,rowIx,count,ruleSet,rule,levelX,length,max_length){ ###
      if(as.character(xIx) %in% ls(ruleright)) {
          if(!is.null(levelX[[xIx]])){  
            rValue <- intersect(ruleright[[as.character(xIx)]],rValue)
+           # here this may be empty -> we stop here
+            if (length(rValue) == 0){
+                count <- count + 1
+                ruleSet[[count]] <- rule
+                return(list(ruleSet = ruleSet, count=count))
+            }
            ruleright[[as.character(xIx)]] <- rValue
          }else{
            ruleright[[as.character(xIx)]] <- paste(ruleright[[as.character(xIx)]], "&", rValue)
