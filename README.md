@@ -1,11 +1,13 @@
 # endoR
-Code and manual of the endoR R-package (Ruaud et al, in preparation).
+Code and manual of the endoR R-package.
 
 [![DOI](https://zenodo.org/badge/349814633.svg)](https://zenodo.org/badge/latestdoi/349814633)
 
 
 - author: Albane Ruaud [albane.ruaud@tuebingen.mpg.de](mailto:albane.ruaud@tuebingen.mpg.de)
 - maintainer: Albane Ruaud [albane.ruaud@tuebingen.mpg.de](mailto:albane.ruaud@tuebingen.mpg.de)
+
+Preprint: Albane Ruaud, Niklas A Pfister, Ruth E Ley, Nicholas D Youngblut. Interpreting tree ensemble machine learning models with endoR. bioRxiv (2022). DOI: [10.1101/2022.01.03.474763](https://www.biorxiv.org/content/10.1101/2022.01.03.474763v1)
 
 
 # Abstract
@@ -27,7 +29,7 @@ Before: select and fit a machine learning model (regression or classification)
 	- without bootstrapping, opt. in parallel, with `model2DE()`
 	- with bootstrapping, opt. in parallel, with `model2DE_resampling()`
 	- with boostrapping each ran in parallel (recommended): `preCluster()` followed by `model2DE_cluster()` iterated on partitions in the `Q()` function of the clusterMQ R-package
-2. If bootstrapping, perform **stability selection**: `stabilitySelection()`. Alternatively, use `evaluateAlpha()` to perform stability selection with various values of `alpha()` and pick the decision ensemble that can predict as many samples as possible for the lowest `alpha`.
+2. If bootstrapping, perform **stability selection**: `stabilitySelection()`. Alternatively, use `evaluateAlpha()` to perform stability selection with various values of `alpha` and pick the decision ensemble that can predict as many samples as possible for the lowest `alpha`.
 3. Plot results with `plotFeatures()` and `plotNetwork()` (created with ggplot2, ggraph and igraph R-packages, arranged with the ggpubr R-package)
 
 
