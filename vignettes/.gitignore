@@ -1,4 +1,4 @@
-*.html
+*.Rmd
 *.R
 
 titanic_survival.Rmd
