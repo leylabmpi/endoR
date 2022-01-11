@@ -10,14 +10,16 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 2.5
 )
 ```
 
 This vignette illustrates how to interpret multiclass models with endoR. We will use the iris data for this purpose.
 
 # Preambule
-```{r setup}
+```{r setup, message = FALSE, warning=FALSE}
 library(endoR)
 library(randomForest)
 library(tidyverse)
