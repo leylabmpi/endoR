@@ -1,8 +1,8 @@
 #' Extract a decision ensemble from a tree-based model, simplify it and creates an interaction network from it.
 #'
-#' Wrapper function to extract rules from a tree based model. 
-#' It automatically transforms multiclass predictive variables into dummy variables. 
-#' Optionally discretizes numeric variables (see discretizeDecisions). Measures decisions and optionally prunes them. Finally, generates a network. 
+#' Wrapper function to extract rules from a tree based model.
+#' It automatically transforms multiclass predictive variables into dummy variables.
+#' Optionally discretizes numeric variables (see discretizeDecisions). Measures decisions and optionally prunes them. Finally, generates a network.
 #' Can be run in parallel.
 #'
 #' @param model model to extract rules from.
@@ -13,7 +13,7 @@
 #' @param classPos the positive class predicted by decisions
 #' @param ntree number of trees to use from the model (default = all)
 #' @param maxdepth maximal node depth to use for extracting rules (by default, full branches are used).
-#' @param ... arguments to be passed to pruneDecisions, discretizeDecisions, filterDecisions.
+#' @param ... arguments to be passed to pruneDecisions, discretizeDecisions, filterDecisionsImportances.
 #' @param exec if decisions have already been extracted, datatable with a 'condition' column.
 #' @param light if FALSE, returns all intermediary decision ensembles; default = TRUE
 #' @param in_parallel if TRUE, the function is run in parallel
@@ -51,7 +51,7 @@ model2DE <- function(
       , light = FALSE){
 
 
-  
+
   # define classPos if it has not been passed
   if (is.character(target) && is.null(classPos) == TRUE) {
     classPos <- names(which.max(table(target)))
@@ -62,6 +62,7 @@ model2DE <- function(
   if (in_parallel == TRUE){
     if (is.null(cluster) == TRUE){
           message('Initiate parallelisation ... ')
+          require(parallel)
           cluster <- makeCluster(n_cores)
           clusterEvalQ(cluster, library(endoR))
           clusterEvalQ(cluster, library(stringr))
@@ -83,7 +84,7 @@ model2DE <- function(
 
   # Results list
   res <- list()
-  
+
 
   ##### MODEL TO RULES #####
   if (is.null(exec) == TRUE){
@@ -108,7 +109,7 @@ model2DE <- function(
       exec <- changeDecisionsDummies(rules = exec, dummy_var = dummy_var, data = data, target =target, classPos = classPos
                               , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster)
     }
-    
+
     if (discretize == TRUE){
       exec <- discretizeDecisions(rules = exec, data = data, target=target
                   , K = K, classPos=classPos, mode = mode
@@ -124,12 +125,12 @@ model2DE <- function(
       exec <- exec$rules
     }
 
-    # re-order conditions, because I am not sure where sub-rules don't get properlly sorted... 
+    # re-order conditions, because I am not sure where sub-rules don't get properlly sorted...
     exec <- exec[,condition:=sapply(condition, function(x){paste(sort(unlist(strsplit(x,split= " & "))),collapse = ' & ')})]
     exec <- unique(as.data.table(exec)[, n:= as.numeric(n)][, n := sum(n), by =  condition])
 
-    if (light == FALSE){ 
-      res$exec <- copy(exec) 
+    if (light == FALSE){
+      res$exec <- copy(exec)
       res$data <- data
     }
 
@@ -141,7 +142,7 @@ model2DE <- function(
                                 , importances = FALSE
                                 , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster)
   rules <- exec[rules, on = 'condition']
-  if (light == FALSE){ res$rules_ori <- copy(rules) } 
+  if (light == FALSE){ res$rules_ori <- copy(rules) }
   rm(exec)
 
 
@@ -158,19 +159,19 @@ model2DE <- function(
   ##### GET THE IMPORTANCES #####
   rules <- decisionImportance(rules = rules, data = data, target = target, classPos = classPos
                    , in_parallel = in_parallel, n_cores = n_cores, cluster = cluster )
-  if (light == FALSE){ 
-    res$rules_imp <- copy(rules) 
-  } else {res$n_decisions <- nrow(rules)} 
+  if (light == FALSE){
+    res$rules_imp <- copy(rules)
+  } else {res$n_decisions <- nrow(rules)}
 
 
 
   ##### FILTER RULES #####
   if (filter == TRUE){
     rules <- filterDecisionsImportances(rules = rules, min_imp =min_imp )
-    if (light == FALSE){ res$rules_filtered <- copy(rules) } 
+    if (light == FALSE){ res$rules_filtered <- copy(rules) }
   }
-  
-  if (light == TRUE){ res$rules <- copy(rules) } 
+
+  if (light == TRUE){ res$rules <- copy(rules) }
 
 
 
@@ -183,7 +184,7 @@ model2DE <- function(
   res$edges <- coocc$edges
   res$nodes_agg <- coocc$nodes_agg
   res$edges_agg <- coocc$edges_agg
-  
+
   return(res)
 
 }
