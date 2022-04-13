@@ -29,7 +29,7 @@ jobs:
     - name: renv install
       shell: bash -l {0}
       run: |
-        R -e 'devtools::install_github(repo = "aruaud/endoR")'
+        R -e 'devtools::install_github(repo = "nick-youngblut/endoR")'
     - name: Package unit tests
       shell: bash -l {0}
       run: |
