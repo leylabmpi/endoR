@@ -29,7 +29,7 @@ jobs:
     - name: renv install
       shell: bash -l {0}
       run: |
-        renv::install("aruaud/endoR")
+        R -e 'renv::install("aruaud/endoR")'
     - name: Package unit tests
       shell: bash -l {0}
       run: |
