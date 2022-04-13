@@ -22,7 +22,7 @@ Preprint: Albane Ruaud, Niklas A Pfister, Ruth E Ley, Nicholas D Youngblut. Inte
 Installation: `devtools::install_github(repo = "aruaud/endoR")`
 
 Before: select and fit a machine learning model (regression or classification)
--  random forest R-packages: randomForest, ranger 
+- random forest R-packages: randomForest, ranger 
 - gradient boosted model R-packages: GBM, XGBoost 
 
 1. Generate the **stable decision ensemble**:
@@ -31,6 +31,10 @@ Before: select and fit a machine learning model (regression or classification)
 	- with boostrapping each ran in parallel (recommended): `preCluster()` followed by `model2DE_cluster()` iterated on partitions in the `Q()` function of the clusterMQ R-package
 2. If bootstrapping, perform **stability selection**: `stabilitySelection()`. Alternatively, use `evaluateAlpha()` to perform stability selection with various values of `alpha` and pick the decision ensemble that can predict as many samples as possible for the lowest `alpha`.
 3. Plot results with `plotFeatures()` and `plotNetwork()` (created with ggplot2, ggraph and igraph R-packages, arranged with the ggpubr R-package)
+
+Some common issues: 
+- if the installation doesn't work, you may need to install R version 4.0.3 and use the inTrees R-package version 1.3 
+- endoR uses text patterns: make sure to remove all special characters from your column names before using endoR, `colnames(data) <- compatibleNames(colnames(data))`
 
 
 # Background
