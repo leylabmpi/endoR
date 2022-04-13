@@ -24,12 +24,12 @@ jobs:
     - name: conda env setup
       shell: bash -l {0}
       run: |
-        conda install -y r-base=${{ matrix.r-version }} r-renv
+        conda install -y r-base=${{ matrix.r-version }} conda-forge::r-devtools
     - uses: actions/checkout@v2	
     - name: renv install
       shell: bash -l {0}
       run: |
-        R -e 'renv::install("aruaud/endoR")'
+        R -e 'devtools::install_github(repo = "aruaud/endoR")'
     - name: Package unit tests
       shell: bash -l {0}
       run: |
