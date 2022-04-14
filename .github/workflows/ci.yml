@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        r-version: [4.0.3]
+        r-version: [4.1]
     steps:
     - uses: conda-incubator/setup-miniconda@v2
       with:
@@ -25,7 +25,7 @@ jobs:
       shell: bash -l {0}
       run: |
         conda install -y mamba
-        mamba install -y r-base=${{ matrix.r-version }} r-renv r-nloptr
+        mamba install -y r-base=${{ matrix.r-version }} r-renv r-nloptr r-data.table r-dplyr r-ggplot2 r-ggraph r-igraph r-stringr
     - uses: actions/checkout@v2	
     - name: renv install
       shell: bash -l {0}
