@@ -25,7 +25,7 @@ jobs:
       shell: bash -l {0}
       run: |
         conda install -y mamba
-        mamba install -y r-base=${{ matrix.r-version }} r-renv r-nloptr r-data.table r-dplyr r-ggplot2 r-ggraph r-igraph r-stringr
+        mamba install -y r-base=${{ matrix.r-version }} r-renv r-nloptr
     - uses: actions/checkout@v2	
     - name: renv install
       shell: bash -l {0}
