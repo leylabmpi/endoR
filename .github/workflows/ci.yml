@@ -19,7 +19,7 @@ jobs:
         miniconda-version: 'latest'
         auto-update-conda: true
         python-version: 3.8
-        channels: conda-forge,bioconda
+        channels: conda-forge,bioconda,defaults
         activate-environment: endor_env
     - name: conda env setup
       shell: bash -l {0}
@@ -31,8 +31,9 @@ jobs:
       shell: bash -l {0}
       run: |
         R -e 'renv::install("rstudio/renv")'
+        R -e 'renv::install("softwaredeng/inTrees/inTrees.Rcheck/inTrees")'
         R -e 'renv::install("nick-youngblut/endoR")'
     - name: Package unit tests
       shell: bash -l {0}
       run: |
-        echo "currently, none"
+        R -e 'library(endoR)'
