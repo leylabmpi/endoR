@@ -21,7 +21,7 @@ model2DE_resampling(
   typeDecay = 2,
   discretize = TRUE,
   K = 2,
-  features_ctg = NULL,
+  mode = "data",
   filter = TRUE,
   min_imp = 0.9,
   seed = 0,

@@ -2,13 +2,11 @@
 
 export(Ranger2List_endoR)
 export(aggregateTaxa)
-export(changeDecisionsDummies)
 export(compatibleNames)
 export(decisionImportance)
 export(decisions2FullDummy)
 export(discretizeData)
 export(discretizeData_model)
-export(discretizeDecisions)
 export(evaluateAlpha)
 export(featureImportance)
 export(filterDecisionsImportances)

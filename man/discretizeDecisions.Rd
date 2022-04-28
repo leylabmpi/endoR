@@ -9,7 +9,7 @@ discretizeDecisions(
   data = NULL,
   target,
   mode = "data",
-  Kmax = 2,
+  K = 2,
   splitV = NULL,
   classPos = NULL,
   in_parallel = FALSE,
@@ -26,7 +26,7 @@ discretizeDecisions(
 
 \item{mode}{whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').}
 
-\item{Kmax}{numeric, maximal number of categories to create from numeric variables (default: Kmax = 2).}
+\item{K}{numeric, number of categories to create from numeric variables (default: K = 2).}
 
 \item{splitV}{instead of running internally discretizeData, one can provide a list with, for each variable to discretize in rules, the thresholds delimiting each new category.}
 

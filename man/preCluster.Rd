@@ -17,7 +17,8 @@ preCluster(
   maxdepth = Inf,
   dummy_var = NULL,
   discretize = FALSE,
-  Kmax = 2,
+  K = 2,
+  mode = "data",
   seed = 0,
   in_parallel = FALSE,
   n_cores = detectCores() - 1
@@ -46,7 +47,7 @@ preCluster(
 
 \item{dummy_var}{if multiclass variables were transformed into dummy variables before fitting the model, one can pass their names in a vector here to avoid multiple levels to be used in a same rule (recommended).}
 
-\item{discretize}{if TRUE, discretization is performed with Kmax (discretizeDecisions, by default = FALSE).}
+\item{discretize}{if TRUE, discretization is performed with K categories (discretizeDecisions, by default = FALSE).}
 
 \item{in_parallel}{if TRUE, the function is run in parallel.}
 

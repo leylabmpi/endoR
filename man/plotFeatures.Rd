@@ -24,6 +24,6 @@ plotFeatures(
 2 ggplots arranged in a row with ggpubr; if return_all = TRUE, returns plots separately in a list , as well as the tables used to create plots.
 }
 \description{
-Returns a ggplot object with variables importance (across all categorical levels for factor variables) and variable per-level influence. 
+Returns a ggplot object with variables importance (across all categorical levels for factor variables) and variable per-level influence.
 It uses the ggpubr package to combine plots.
 }

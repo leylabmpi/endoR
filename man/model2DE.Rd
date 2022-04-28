@@ -14,8 +14,8 @@ model2DE(
   classPos = NULL,
   dummy_var = NULL,
   discretize = FALSE,
-  Kmax = 2,
-  features_ctg = NULL,
+  K = 2,
+  mode = "data",
   prune = TRUE,
   maxDecay = 0.05,
   typeDecay = 2,
@@ -59,14 +59,14 @@ model2DE(
 
 \item{light}{if FALSE, returns all intermediary decision ensembles; default = TRUE}
 
-\item{...}{arguments to be passed to pruneDecisions, discretizeDecisions, filterDecisions.}
+\item{...}{arguments to be passed to pruneDecisions, discretizeDecisions, filterDecisionsImportances.}
 }
 \value{
 A list with the final decision ensemble, if numeric variables were discretized in decisions, the discretized data, edges and nodes to make a network (plotNetwork and plotFeatures).
 }
 \description{
-Wrapper function to extract rules from a tree based model. 
-It automatically transforms multiclass predictive variables into dummy variables. 
-Optionally discretizes numeric variables (see discretizeDecisions). Measures decisions and optionally prunes them. Finally, generates a network. 
+Wrapper function to extract rules from a tree based model.
+It automatically transforms multiclass predictive variables into dummy variables.
+Optionally discretizes numeric variables (see discretizeDecisions). Measures decisions and optionally prunes them. Finally, generates a network.
 Can be run in parallel.
 }
