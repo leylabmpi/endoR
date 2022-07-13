@@ -1,8 +1,8 @@
 ---
-title: "Iris: multiclass"
+title: "endoR: multiclass"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{endoR}
+  %\VignetteIndexEntry{endoR: multiclass}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

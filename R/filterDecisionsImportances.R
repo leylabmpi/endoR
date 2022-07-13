@@ -8,31 +8,33 @@
 #' @param min_imp minimal relative importance of the decisions that must be kept, the threshold to remove decisions is thus going to take lower values than max(imp)*min_imp.
 #' @return The decision ensemble from which decisions with the lowest errors and/or importances have been removed, or are indicated in a column "filt_err"/"filt_imp".
 #' @export
-filterDecisionsImportances <- function(rules, min_imp = 0.7){
+filterDecisionsImportances <- function(rules, min_imp = 0.7) {
+  if (("data.table" %in% class(rules)) == FALSE) {
+    rules <- setDT(rules)
+  }
 
-  if (('data.table' %in% class(rules)) == FALSE){rules <- setDT(rules)}
-
-  maxThr <- rules[,max(imp)]*min_imp
-  impthr <- seq(0, maxThr, by = maxThr/500)
+  maxThr <- rules[, max(imp)] * min_imp
+  impthr <- seq(0, maxThr, by = maxThr / 500)
 
   checkImp <- data.table(impThr = impthr)
 
-  for (i in 1:nrow(checkImp)){
-      set(checkImp, i, "nrules", nrow(rules[imp >= impthr[i],]))
-      set(checkImp, i, "sum_impn", sum(rules[imp >= impthr[i],imp*n])) ###remove n
+  for (i in 1:nrow(checkImp)) {
+    set(checkImp, i, "nrules", nrow(rules[imp >= impthr[i], ]))
+    set(checkImp, i, "sum_impn", sum(rules[imp >= impthr[i], imp * n])) ### remove n
   }
 
-  checkImp <- checkImp[,nremoved:=max(nrules) - nrules][,f:=sum_impn*nremoved]
+  checkImp <- checkImp[, nremoved := max(nrules) - nrules][, f := sum_impn * nremoved]
 
   maxD <- max(checkImp[f == max(f), impThr])
-  rules<- rules[, filt_imp:='not ok'][imp >= maxD, filt_imp:='ok' ]
+  rules <- rules[, filt_imp := "not ok"][imp >= maxD, filt_imp := "ok"]
 
-  message('Threshold for relative importance: < ', round(maxD, digits = 3), ' and '
-      , nrow(rules[filt_imp == 'not ok']), ' rules removed.\n')
+  message(
+    "Threshold for relative importance: < ", round(maxD, digits = 3), " and ",
+    nrow(rules[filt_imp == "not ok"]), " rules removed.\n"
+  )
 
   # Filter rules
-  rules <- subset(rules, filt_imp == 'ok', select = -filt_imp)
+  rules <- subset(rules, filt_imp == "ok", select = -filt_imp)
 
   return(rules)
-
 }

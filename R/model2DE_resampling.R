@@ -12,61 +12,64 @@
 #' @return A list with the row numbers of partitioned data, the rules originally extracted from the model, a list with results from each bootstrap (use stabilitySelection to obtain the stable decison ensemble).
 #' @import data.table
 #' @export
-model2DE_resampling <- function(
-      model, model_type, data, target, classPos = NULL
-      , times = 10, p = .5, sample_weight = NULL
-      , ntree = 'all', maxdepth = Inf
-      , dummy_var = NULL
-      , prune = TRUE, maxDecay = 0.05, typeDecay = 2
-      , discretize = TRUE, K = 2, mode = 'data'
-      , filter = TRUE, min_imp = 0.9
-      #, aggregate_taxa = FALSE, taxa = NULL
-      #, alpha_error = 1, pi_thr = 0.7
-    , seed = 0, in_parallel = FALSE, n_cores = detectCores() - 1, cluster = NULL
-      ){
+model2DE_resampling <- function(model, model_type, data, target, classPos = NULL,
+                                times = 10, p = .5, sample_weight = NULL,
+                                ntree = "all", maxdepth = Inf,
+                                dummy_var = NULL,
+                                prune = TRUE, maxDecay = 0.05, typeDecay = 2,
+                                discretize = TRUE, K = 2, mode = "data",
+                                filter = TRUE, min_imp = 0.9
+                                # , aggregate_taxa = FALSE, taxa = NULL
+                                # , alpha_error = 1, pi_thr = 0.7
+                                , seed = 0, in_parallel = FALSE, n_cores = detectCores() - 1, cluster = NULL) {
 
 
-### Get the partitions and rules
-tmp <- preCluster(model = model, model_type=model_type, data=data, target=target
-                  , times = times, p = p, sample_weight = sample_weight, classPos = classPos
-                  , ntree = ntree, maxdepth = maxdepth, dummy_var = dummy_var
-                  , discretize = discretize, K = K, mode = mode
-                  , seed = seed
-                  , in_parallel = in_parallel, n_cores = n_cores)
-exec <- tmp$exec
-partitions <- tmp$partitions
-data <- tmp$data
+  ### Get the partitions and rules
+  tmp <- preCluster(
+    model = model, model_type = model_type, data = data, target = target,
+    times = times, p = p, sample_weight = sample_weight, classPos = classPos,
+    ntree = ntree, maxdepth = maxdepth, dummy_var = dummy_var,
+    discretize = discretize, K = K, mode = mode,
+    seed = seed,
+    in_parallel = in_parallel, n_cores = n_cores
+  )
+  exec <- tmp$exec
+  partitions <- tmp$partitions
+  data <- tmp$data
 
 
-### Get a network for each subset
-# define classPos if it has not been passed
-if (is.character(target) && is.null(classPos) == TRUE) {
+  ### Get a network for each subset
+  # define classPos if it has not been passed
+  if (is.character(target) && is.null(classPos) == TRUE) {
     classPos <- names(which.max(table(target)))
-    cat('Positive class:', classPos, '\n')
-}
-resamp <- list()
-k <- 1
-for (ix in partitions){
-    res <- model2DE(data = data[ix, ], target = target[ix]
-                      , exec = exec
-                      , classPos = classPos
-                      , prune = prune, maxDecay = maxDecay, typeDecay = typeDecay
-                      , filter = filter
-                      , in_parallel = in_parallel, n_cores = n_cores
-                      , light = TRUE)
-    
+    cat("Positive class:", classPos, "\n")
+  }
+  resamp <- list()
+  k <- 1
+  for (ix in partitions) {
+    res <- model2DE(
+      data = data[ix, ], target = target[ix],
+      exec = exec,
+      classPos = classPos,
+      prune = prune, maxDecay = maxDecay, typeDecay = typeDecay,
+      filter = filter,
+      in_parallel = in_parallel, n_cores = n_cores,
+      light = TRUE
+    )
+
     # get the decisions: depends on options so we'll just take whatever was produced before getting nodes!
-    i_rules <- which(names(res) == 'nodes')-1
+    i_rules <- which(names(res) == "nodes") - 1
 
-    res <- list('pdecisions' = res$n_decisions
-                , 'rules' = res[[i_rules]]
-                , 'nodes_agg' = res$nodes_agg, 'edges_agg' = res$edges_agg)
-    
+    res <- list(
+      "pdecisions" = res$n_decisions,
+      "rules" = res[[i_rules]],
+      "nodes_agg" = res$nodes_agg, "edges_agg" = res$edges_agg
+    )
+
     resamp[[k]] <- res
-    k <- k+1
-}
+    k <- k + 1
+  }
 
 
-return(list('partitions' = partitions, 'exec' = exec, 'data' = data, 'resamp' = resamp))
-
+  return(list("partitions" = partitions, "exec" = exec, "data" = data, "resamp" = resamp))
 }

@@ -1,8 +1,8 @@
 ---
-title: "Titanic: bootstrapping"
+title: "endoR: bootstrapping"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{endoR}
+  %\VignetteIndexEntry{endoR: bootstrapping}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -84,7 +84,7 @@ titanic_rf$confusion.matrix
 
 ## Run endoR
 
-The function draws `times = 10` sample bootstraps with replacement (by default,
+The function draws `times = 5` sample bootstraps with replacement (by default,
 `p = 0.5` is the fraction of samples drawn). One can use `sample_weight` to 
 change the probability of samples to be drawn - this is useful for imbalanced
 data. 
@@ -99,7 +99,7 @@ the function in parallel to accelerate it (`in_parallel = TRUE` with, by default
 rules <- model2DE_resampling(model = titanic_rf, model_type = 'ranger'
                                  , data = titanic %>% select(-survived)
                                  , target = titanic$survived, classPos = 'yes'
-                                 , times = 10
+                                 , times = 5
                                  , sample_weight = samp_weight
                                  , discretize = TRUE, K = 2
                                  , prune = TRUE, maxDecay = 0.05, typeDecay = 2 
@@ -143,13 +143,13 @@ We can have a look at the selected rules: by default, we have selected stable
 decisions with `pi=0.7`, the minimal fraction of bootstraps in which a decision 
 should have been important do be selected as stable. Hence, when looking at 
 decisions, we must subset the decisions that were important in 
-`inN >= pi*times = 0.7*10 = 7`. 
+`inN >= pi*times = 0.7*5 = 7`. 
 Note that you can find `pi` in `rules$parameters['pi_thr']`.
 
 The `inTrees::presentRules()` function formats the table to include the feature 
 names. 
 ```{r}
-de_final$rules_summary %>% subset(inN >= 7) %>% 
+de_final$rules_summary %>% subset(inN >= .7*5) %>% 
      presentRules(colN = colnames(rules$data)) %>% head
 ```
 
@@ -229,9 +229,9 @@ I will run it on my computer (`clustermq.scheduler = "multiprocess"`).
 preclu <- preCluster(model = titanic_rf, model_type = 'ranger'
                   , data = titanic %>% select(-survived)
                   , target = titanic$survived, classPos = 'yes'
-                  , times = 10 # number of bootstraps
+                  , times = 5 # number of bootstraps
                   , sample_weight = samp_weight # sample weight for resampling
-                  , discretize = TRUE, K = 3
+                  , discretize = TRUE, K = 2
                   , in_parallel = TRUE, n_cores = 3)
 ```
 
@@ -269,7 +269,7 @@ de_final <- stabilitySelection(rules = rules, alpha_error = 3)
 ```
 
 ```{r}
-de_final$rules_summary %>% subset(inN >= 7) %>% 
+de_final$rules_summary %>% subset(inN >= .7*5) %>% 
      presentRules(colN = colnames(preclu$data)) %>% head
 ```
 

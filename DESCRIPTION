@@ -15,7 +15,8 @@ Suggests:
     rmarkdown,
     ranger,
     xgboost,
-    parallel
+    parallel,
+    testthat (>= 3.0.0)
 Imports: data.table, dplyr, ggplot2, ggraph, igraph, inTrees, stringr, caret, ggpubr
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
@@ -23,3 +24,4 @@ Depends:
     R (>= 2.10)
 BugReports: https://github.com/aruaud/endoR/issues
 URL: https://github.com/aruaud/endoR
+Config/testthat/edition: 3

@@ -11,36 +11,48 @@
 #' @return A dataframe with aggregated features in the "Feature" column, and the 'recipient' taxa in the "newFeature" column.
 #'
 #' @export
-aggregateTaxa <- function(taxa,features= NULL, weights = NULL, thr = NULL, type = 'coarse'){
-
-  if (!is.null(weights) && !('weight' %in% colnames(weights))){
+aggregateTaxa <- function(taxa, features = NULL, weights = NULL, thr = NULL, type = "coarse") {
+  if (!is.null(weights) && !("weight" %in% colnames(weights))) {
     wI <- which(sapply(weights, is.numeric))
-    colnames(weights)[wI] <- 'weight'
+    colnames(weights)[wI] <- "weight"
   }
 
-  if (is.vector(taxa) == TRUE || !('Feature' %in% colnames(taxa)) ){ taxa<-elongateTaxa(features = features, taxa = taxa) }
+  if (is.vector(taxa) == TRUE || !("Feature" %in% colnames(taxa))) {
+    taxa <- elongateTaxa(features = features, taxa = taxa)
+  }
 
-  if (is.null(thr) == TRUE){thr <- median(weights$weight)}
+  if (is.null(thr) == TRUE) {
+    thr <- median(weights$weight)
+  }
 
   ### wrapper of the 2 collapsing functions, with the option of performing both
-  if (type == 'coarse'){ taxa <- aggregateTaxa_coarse(taxa, weights, thr)}
+  if (type == "coarse") {
+    taxa <- aggregateTaxa_coarse(taxa, weights, thr)
+  }
 
-  if (type == 'fine'){ taxa <- aggregateTaxa_fine(taxa) }
+  if (type == "fine") {
+    taxa <- aggregateTaxa_fine(taxa)
+  }
 
-  if (type == 'both'){
+  if (type == "both") {
     taxa_d <- aggregateTaxa_coarse(taxa, weights, thr)
     taxa_u <- aggregateTaxa_fine(subset(taxa, Feature %in% taxa_d$newFeature))
 
-    taxa <- unique(taxa_u[,.(Feature, newFeature)])[, 'coarseFeature' = newFeature ][,newFeature:=NULL]
-    taxa <- merge(taxa, taxa_d[,.(newFeature, Feature, weight, newWeight)], by = c('coarseFeature' = 'newFeature'))
+    taxa <- unique(taxa_u[, .(Feature, newFeature)])[, "coarseFeature" = newFeature][, newFeature := NULL]
+    taxa <- merge(taxa, taxa_d[, .(newFeature, Feature, weight, newWeight)], by = c("coarseFeature" = "newFeature"))
 
     # record how many times a newFeature has been attributed and who was changed
-    taxa <- taxa[,n:=.N, by = 'newFeature'][, 'changed':='Unchanged'][
-                 n>1 & newFeature == Feature, changed := 'Recipient'][
-                 newFeature != coarseFeature & coarseFeature == Feature, changed := 'Upgraded'][
-                 newFeature == coarseFeature & coarseFeature != Feature, changed := 'Downgraded'][
-                 newFeature != coarseFeature & coarseFeature != Feature, changed := 'Down&Upgraded'][
-                 , changed := as.factor(changed)]
+    taxa <- taxa[, n := .N, by = "newFeature"][, "changed" := "Unchanged"][
+      n > 1 & newFeature == Feature, changed := "Recipient"
+    ][
+      newFeature != coarseFeature & coarseFeature == Feature, changed := "Upgraded"
+    ][
+      newFeature == coarseFeature & coarseFeature != Feature, changed := "Downgraded"
+    ][
+      newFeature != coarseFeature & coarseFeature != Feature, changed := "Down&Upgraded"
+    ][
+      , changed := as.factor(changed)
+    ]
   }
 
   return(taxa)
