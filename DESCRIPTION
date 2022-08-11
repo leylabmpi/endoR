@@ -3,7 +3,7 @@ Type: Package
 Title: Interpret and Visualize Stable Tree Ensemble Models
 Version: 0.1.0
 Author@R: c(person("Albane", "Ruaud", email = "albane.ruaud@tuebingen.mpg.de"
-                  , role = c("aut", "cre"), comment = c(ORCID = "0000-0001-5920-1710")
+                  , role = c("aut", "cre"), comment = c(ORCID = "0000-0001-5920-1710"))
             , person("Houtao", "Deng", role = "ctb"))
 Description: endoR extracts and visualizes how predictive variables contribute to tree ensemble model accuracy. 
   You provide the model and data, tell endoR which regularization steps you want to obtain stable results, and it will return a plot of the feature importance and influence on the response variable and a decision network.
