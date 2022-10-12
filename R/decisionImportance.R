@@ -3,7 +3,7 @@
 #' This function computes the importance of decisions.
 #'
 #'
-#' @param rulesa a data.frame with a column "condition" or a vector with name "condition".
+#' @param rules a data.frame with a column "condition" or a vector with name "condition".
 #' @param data data from which to get the decision support.
 #' @param target response variable.
 #' @param classPos if classification, the positive class.

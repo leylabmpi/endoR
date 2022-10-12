@@ -7,7 +7,7 @@
 #' @param partition a vector with row numbers to subset data.
 #' @export
 model2DE_cluster <- function(partition) {
-  library(data.table)
+  #library(data.table)
   res <- model2DE(
     data = data[partition, ], target = target[partition],
     exec = exec,

@@ -6,6 +6,9 @@
 \usage{
 compatibleNames(x)
 }
+\arguments{
+\item{x}{character string or vector}
+}
 \description{
 Transform character strings to be compatible with endoR functions.
 }

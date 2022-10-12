@@ -15,19 +15,25 @@ evaluateAlpha(
 )
 }
 \arguments{
+\item{rules}{list of bootstrap results}
+
 \item{alphas}{expected number of false positive decision selected (default = 1).}
 
 \item{pi_thr}{fraction of bootstraps in which a decision should have been selected in to be included in the stable decision ensemble (default = 0.7).}
 
+\item{data}{data for which to calculate how many samples follow each decision. Columns should be the same as for fitting the decision ensemble but samples can be any.}
+
 \item{decision_ensembles}{should the decision ensemble be returned?}
 
-\item{res}{list of bootstrap results}
+\item{aggregate_taxa}{should taxa be aggregated at the genus level (if species have lower importance than their genus) or species level (if a genus is represented by a unique species)}
+
+\item{taxa}{if aggregate_taxa = TRUE, a data.frame with all taxa included in the dataset: columns = taxonomic ranks (with columns f, g, and s)}
 }
 \value{
 A list with all decisions from all bootstrasps, the summary of decisions across bootstraps, the feature and interaction importance and influence in the nodes and edges dataframes, as well as the the decision-wise feature and interaction importances and influences the nodes_agg and edges_agg dataframes.
 }
 \description{
-The aim is to help picking an alpha that will result in a decision ensemble able to predict most samples. Performs stability selection for each of the given alpha value. The number of decisions and of samples that follow decisions are also calculated. 
+The aim is to help picking an alpha that will result in a decision ensemble able to predict most samples. Performs stability selection for each of the given alpha value. The number of decisions and of samples that follow decisions are also calculated.
 The procedure is adapted from Meinshausenand and Buehlmann (2010): the best decisions from each bootstrap are pre-seleected and the the ones that were pre-selected in a certain fraction of bootstraps are included in the stable decision ensemble.
 The decision importances and multiplicities are averaged across bootstraps. Decision-wise feature and interaction importances and influences are averaged across bootstraps before computing the feature and interaction importances and influences from the stable decision ensemble.
 }

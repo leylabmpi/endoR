@@ -21,10 +21,8 @@ model2DE(
   typeDecay = 2,
   aggregate_taxa = FALSE,
   taxa = NULL,
-  type = "both",
   filter = TRUE,
   min_imp = 0.7,
-  ntest = 100,
   exec = NULL,
   in_parallel = FALSE,
   n_cores = detectCores() - 1,
@@ -49,6 +47,26 @@ model2DE(
 
 \item{dummy_var}{if multiclass variables were transformed into dummy variables before fitting the model, one can pass their names in a vector here to avoid multiple levels to be used in a same rule (recommended).}
 
+\item{discretize}{should numeric variables be transformed to categorical variables? If TRUE, K categories are created for each variable based on their distribution in data (mode = 'data') or based on the thresholds used in the decision ensemble (mode = 'model')}
+
+\item{K}{numeric, number of categories to create from numeric variables (default: K = 2).}
+
+\item{mode}{whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').}
+
+\item{prune}{should unimportant features be removed from decisions (= pruning)? Features are removed by calculating the difference in prediction error of the decision with versus without the feature. If the difference is small (< maxDecay), then the feature is removed. The difference can be absolute (typeDecay = 1) or relative (typeDecay = 2, default). See pruneDecisions() for details.}
+
+\item{maxDecay}{when pruning, threshold for the increase in error; if maxDecay = -Inf, no pruning is done; if maxDecay = 0, only variables increasing the error are pruned from decisions.}
+
+\item{typeDecay}{if typeDecay = 1, the absolute increase in error is computed, and the relative one is computed if typeDecay = 2 (default).}
+
+\item{aggregate_taxa}{should taxa be aggregated at the genus level (if species have lower importance than their genus) or species level (if a genus is represented by a unique species)}
+
+\item{taxa}{if aggregate_taxa = TRUE, a data.frame with all taxa included in the dataset: columns = taxonomic ranks (with columns f, g, and s)}
+
+\item{filter}{should decisions with low importance be removed from the decision ensemble? If TRUE, then decisions are filtered in a heuristic manner according to their importance and multiplicity (see filterDecisionsImportances() ).}
+
+\item{min_imp}{minimal relative importance of the decisions that must be kept, the threshold to remove decisions is thus going to take lower values than max(imp)*min_imp.}
+
 \item{exec}{if decisions have already been extracted, datatable with a 'condition' column.}
 
 \item{in_parallel}{if TRUE, the function is run in parallel}
@@ -58,8 +76,6 @@ model2DE(
 \item{cluster}{the cluster to use to run the function in parallel}
 
 \item{light}{if FALSE, returns all intermediary decision ensembles; default = TRUE}
-
-\item{...}{arguments to be passed to pruneDecisions, discretizeDecisions, filterDecisionsImportances.}
 }
 \value{
 A list with the final decision ensemble, if numeric variables were discretized in decisions, the discretized data, edges and nodes to make a network (plotNetwork and plotFeatures).

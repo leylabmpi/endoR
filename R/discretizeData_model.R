@@ -2,7 +2,8 @@
 #'
 #' This function discretizes all numerical variables into Kmax categories based on the splits used by the model for each variable.
 #'
-#' @param data data to discretize.
+#' @param data data to discretize
+#' @param conditions character vector with all conditions from which to find the thresholds
 #' @param Kmax numeric, maximal number of categories for each variable (default: Kmax = 2).
 #' @param return_split if TRUE, then the table with thresholds used to discretize data is also returned.
 #' @return Data with discretized variables.

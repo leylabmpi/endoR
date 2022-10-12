@@ -26,13 +26,23 @@ plotNetwork(
 
 \item{layout}{network layout, default is 'stress' (see ggraph package)}
 
+\item{colour_edge_low}{colour for the negative interaction influence values (i.e., edges; default: yellowish)}
+
+\item{colour_edge_mid}{colour for the null interaction influence values (i.e., edges; default: light grey)}
+
+\item{colour_edge_high}{colour for the positive interaction influence values (i.e., edges; default: blue)}
+
+\item{colour_node_low}{colour for the negative feature influence values (i.e., nodes; default: yellowish)}
+
+\item{colour_node_mid}{colour for the null feature influence values (i.e., nodes; default: light grey)}
+
+\item{colour_node_high}{colour for the positive feature influence values (i.e., nodes; default: blue)}
+
 \item{text_size}{size of node labels.}
 
 \item{hide_isolated_nodes}{logical, default = TRUE (= nodes without any edge are not shown).}
 
 \item{seed}{the seed to use for generating the network.}
-
-\item{colour_x_y}{colour of x = edge or node, and y = low, mid or high (e.g., colour_edge_mid), to use for the colour gradients.}
 }
 \value{
 a ggraph object

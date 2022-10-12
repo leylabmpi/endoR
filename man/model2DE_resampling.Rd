@@ -31,19 +31,51 @@ model2DE_resampling(
 )
 }
 \arguments{
+\item{model}{model to extract rules from.}
+
+\item{model_type}{character string: 'RF', 'random forest', 'rf', 'xgboost', 'XGBOOST', 'xgb', 'XGB', 'ranger', 'Ranger', 'gbm' or 'GBM'.}
+
+\item{data}{data with the same columns than data used to fit the model.}
+
+\item{target}{response variable.}
+
+\item{classPos}{the positive class predicted by decisions}
+
 \item{times}{number of bootstraps}
 
 \item{p}{fraction of data to resample.}
 
 \item{sample_weight}{numeric vector with the weights of samples for bootstrap resampling. For classification, if 2 values are given, the 1st one is assumed to be for the positive class (classpos argument).}
 
+\item{ntree}{number of trees to use from the model (default = all)}
+
+\item{maxdepth}{maximal node depth to use for extracting rules (by default, full branches are used).}
+
+\item{dummy_var}{if multiclass variables were transformed into dummy variables before fitting the model, one can pass their names in a vector here to avoid multiple levels to be used in a same rule (recommended).}
+
+\item{prune}{should unimportant features be removed from decisions (= pruning)? Features are removed by calculating the difference in prediction error of the decision with versus without the feature. If the difference is small (< maxDecay), then the feature is removed. The difference can be absolute (typeDecay = 1) or relative (typeDecay = 2, default). See pruneDecisions() for details.}
+
+\item{maxDecay}{when pruning, threshold for the increase in error; if maxDecay = -Inf, no pruning is done; if maxDecay = 0, only variables increasing the error are pruned from decisions.}
+
+\item{typeDecay}{if typeDecay = 1, the absolute increase in error is computed, and the relative one is computed if typeDecay = 2 (default).}
+
+\item{discretize}{should numeric variables be transformed to categorical variables? If TRUE, K categories are created for each variable based on their distribution in data (mode = 'data') or based on the thresholds used in the decision ensemble (mode = 'model')}
+
+\item{K}{numeric, number of categories to create from numeric variables (default: K = 2).}
+
+\item{mode}{whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').}
+
+\item{filter}{should decisions with low importance be removed from the decision ensemble? If TRUE, then decisions are filtered in a heuristic manner according to their importance and multiplicity (see filterDecisionsImportances() ).}
+
+\item{min_imp}{minimal relative importance of the decisions that must be kept, the threshold to remove decisions is thus going to take lower values than max(imp)*min_imp.}
+
+\item{seed}{which seed to use to make the random bootstraps - it is fixed for reproducibility}
+
 \item{in_parallel}{if TRUE, the function is run in parallel}
 
-\item{n_cores}{if in_parallel = TRUE, and no cluster has been passed: number of cores to use}
+\item{n_cores}{if in_parallel = TRUE, and no cluster has been passed: number of cores to use, default is detectCores() - 1}
 
 \item{cluster}{the cluster to use to run the function in parallel}
-
-\item{...}{arguments to be passed to the model2DE funtion.}
 }
 \value{
 A list with the row numbers of partitioned data, the rules originally extracted from the model, a list with results from each bootstrap (use stabilitySelection to obtain the stable decison ensemble).

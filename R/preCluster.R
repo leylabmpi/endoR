@@ -14,9 +14,11 @@
 #' @param ntree number of trees to use from the model (default = all)
 #' @param maxdepth maximal node depth to use for extracting rules (by default, full branches are used).
 #' @param discretize if TRUE, discretization is performed with K categories (discretizeDecisions, by default = FALSE).
+#' @param K numeric, number of categories to create from numeric variables (default: K = 2).
+#' @param mode whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').
+#' @param seed which seed to use to make the random bootstraps - it is fixed for reproducibility
 #' @param in_parallel if TRUE, the function is run in parallel.
 #' @param n_cores if in_parallel = TRUE, and no cluster has been passed: number of cores to use.
-#' @param cluster the cluster to use to run the function in parallel.
 #' @return A list with the row numbers of partitioned data, the rules originally extracted from the model and new data if discretization was performed.
 #' @import data.table
 #' @export

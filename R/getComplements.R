@@ -53,7 +53,7 @@ getComplements <- function(rules, data, target, classPos = NULL,
     var = str_extract(names(rulesAdd)[cIx], pattern = "(?<=varRm)[:digit:]+$"),
     condition = rulesAdd[cIx]
   )
-  tmp <- unique(copy(rulesRm)[condition != "", .(condition)]) # remove repetitions due to the dummy variables
+  tmp <- unique(copy(rulesRm)[condition != "", list(condition)]) # remove repetitions due to the dummy variables
   if (nrow(tmp) == 0) {
     message("There is no interaction in the decision ensemble, only single variable effects.")
   } else {

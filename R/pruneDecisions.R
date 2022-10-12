@@ -82,7 +82,6 @@ pruneDecisions <- function(rules, data, target, classPos = NULL, maxDecay = 0, t
 
 ##########################################################
 
-#' @export
 pruneSingleRule_endoR <-
   function(rule, data, target, type = "reg", maxDecay = 0, typeDecay = 1) {
     setDTthreads(threads = 1)

@@ -41,13 +41,9 @@ discretizeDecisions(
  @return Decision ensemble with discretized variables in the condition. Decisions with the same condition are aggregated: their importances are summed, and all other metrics are averaged.
 
  @export}
-
-\item{data_ctg}{discretized data, if splitV is passed. Necessary to re-compute the metrics (if column 'err' in rules).}
-
-\item{return_data}{if TRUE, discretized data are also returned.}
 }
 \description{
 This function replaces in a decision ensemble the boundaries of numerical features by their corresponding levels when the variable is discretized.
-If discretized data are not passed, data are first discretized into Kmax categories based on their quantiles (see discretizeData). 
+If discretized data are not passed, data are first discretized into Kmax categories based on their quantiles (see discretizeData).
 The error, prediction, importance and multiplicity of decisions are updated after discretization.
 }

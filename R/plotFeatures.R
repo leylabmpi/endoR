@@ -6,6 +6,9 @@
 #' @param decision_ensemble stable decision ensemble (see stabilitySelection).
 #' @param levels_order optional, order for variables levels on the influence plot
 #' @param return_all TRUE, returns the table of feature importance and influences and each plot separated (default = FALSE).
+#' @param colour_low colour for the negative feature influence values (default: yellowish)
+#' @param colour_mid colour for the null feature influence values (default: light grey)
+#' @param colour_high colour for the positive feature influence values (default: blue)
 #' @return 2 ggplots arranged in a row with ggpubr; if return_all = TRUE, returns plots separately in a list , as well as the tables used to create plots.
 #' @export
 plotFeatures <- function(decision_ensemble, levels_order = NULL,
@@ -83,7 +86,6 @@ plotFeatures <- function(decision_ensemble, levels_order = NULL,
       "influences" = agg_inf, "influence_p" = level_inf
     ))
   } else {
-    require(ggpubr)
     paggs <- ggpubr::ggarrange(paggimp + theme(legend.position = "none"),
       level_inf,
       nrow = 1, ncol = 2, widths = c(1, 0.8)

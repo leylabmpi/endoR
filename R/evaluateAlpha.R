@@ -3,16 +3,20 @@
 #' The aim is to help picking an alpha that will result in a decision ensemble able to predict most samples. Performs stability selection for each of the given alpha value. The number of decisions and of samples that follow decisions are also calculated.
 #' The procedure is adapted from Meinshausenand and Buehlmann (2010): the best decisions from each bootstrap are pre-seleected and the the ones that were pre-selected in a certain fraction of bootstraps are included in the stable decision ensemble.
 #' The decision importances and multiplicities are averaged across bootstraps. Decision-wise feature and interaction importances and influences are averaged across bootstraps before computing the feature and interaction importances and influences from the stable decision ensemble.
-#' @param res list of bootstrap results
+#' @param rules list of bootstrap results
 #' @param alphas expected number of false positive decision selected (default = 1).
+#' @param data data for which to calculate how many samples follow each decision. Columns should be the same as for fitting the decision ensemble but samples can be any. 
 #' @param decision_ensembles should the decision ensemble be returned?
 #' @param pi_thr fraction of bootstraps in which a decision should have been selected in to be included in the stable decision ensemble (default = 0.7).
+#' @param aggregate_taxa should taxa be aggregated at the genus level (if species have lower importance than their genus) or species level (if a genus is represented by a unique species)
+#' @param taxa if aggregate_taxa = TRUE, a data.frame with all taxa included in the dataset: columns = taxonomic ranks (with columns f, g, and s)
 #' @return A list with all decisions from all bootstrasps, the summary of decisions across bootstraps, the feature and interaction importance and influence in the nodes and edges dataframes, as well as the the decision-wise feature and interaction importances and influences the nodes_agg and edges_agg dataframes.
 #' @export
 
 evaluateAlpha <- function(rules, alphas = c(5, 10, 15, 20, 30, 50, 75), pi_thr = 0.7,
                           data = NULL, decision_ensembles = TRUE,
-                          aggregate_taxa = FALSE, taxa = NULL) {
+                          aggregate_taxa = FALSE, taxa = NULL
+                          ) {
   check_sampl <- data.frame(alpha = numeric(), n_decision = numeric(), n_samples = numeric())
   if ("resamp" %in% names(rules)) {
     minN <- pi_thr * length(rules$resamp)

@@ -10,10 +10,10 @@
 featureImportance <- function(nodes_agg) {
   featImp <- copy(nodes_agg)[, `:=`(Feature = str_extract(var, pattern = ".*(?=\\_{2})"))][
     is.na(Feature), Feature := var
-  ][, .(Feature, importance, imp, n)][
+  ][, list(Feature, importance, imp, n)][
     , importance := sum(importance * imp * n),
     by = Feature
-  ][, .(Feature, importance)]
+  ][, list(Feature, importance)]
   featImp <- unique(featImp)
   setorder(featImp, -importance)
   return(featImp)

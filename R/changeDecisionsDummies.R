@@ -1,5 +1,15 @@
-# takes decisions and modifies them so that only one level of a multiclass variable is used in decisions
-# ’ @export
+#' Takes decisions and modifies them so that only one level of a multiclass variable is used in decisions
+#'
+#' @param rules a data frame with a column "condition".
+#' @param dummy_var string vector with the names of columns to change to dummy variable.
+#' @param data data on which to fit the decision ensemble.
+#' @param target response variable.
+#' @param classPos for classification, the positive class.
+#' @param in_parallel if TRUE, the function is run in parallel.
+#' @param n_cores if in_parallel = TRUE, and no cluster has been passed: number of cores to use, default is detectCores() - 1.
+#' @param cluster the cluster to use to run the function in parallel (opt).
+#'
+#' @export
 changeDecisionsDummies <- function(rules, dummy_var, data, target, classPos = NULL,
                                    in_parallel = FALSE, n_cores = detectCores() - 1, cluster = NULL) {
 

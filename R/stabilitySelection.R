@@ -38,15 +38,15 @@ stabilitySelection <- function(rules, alpha_error = 1, pi_thr = 0.7, aggregate_t
     return(x$rules[1:min(qsubset, nrow(x$rules)), ])
   }, qsubset = qsubset)
   rules_agg <- do.call(what = rbind, rules_agg)
-  rules_agg <- rules_agg[, .(len, support, err, condition, pred, imp, n)]
+  rules_agg <- rules_agg[, list(len, support, err, condition, pred, imp, n)]
 
   rules_agg[is.na(rules_agg)] <- 0
   agg_res$rules_agg <- rules_agg
 
 
   # add summary rules
-  rules_summary <- unique(copy(rules_agg)[, .(condition, imp, n, len, support, err, pred)][
-    , .(
+  rules_summary <- unique(copy(rules_agg)[, list(condition, imp, n, len, support, err, pred)][
+    , list(
       inN = .N, len = mean(len), support = mean(support), err = mean(err), pred = mean(pred),
       imp = mean(imp), imp_sd = sd(imp),
       n = mean(n), n_sd = sd(n)
@@ -99,7 +99,7 @@ stabilitySelection <- function(rules, alpha_error = 1, pi_thr = 0.7, aggregate_t
     # replace variables column numbers
     featImp <- unique(featImp[, "Feature" := str_extract(var, pattern = ".*(?=\\_{2})")][
       is.na(Feature), "Feature" := var
-    ][, .(Feature, importance)][
+    ][, list(Feature, importance)][
       , importance := sum(importance),
       by = Feature
     ])
@@ -108,7 +108,7 @@ stabilitySelection <- function(rules, alpha_error = 1, pi_thr = 0.7, aggregate_t
 
     newFeatures <- aggregateTaxa(taxa = taxa, features = featImp$Feature, weights = featImp)
     if ("Recipient" %in% newFeatures$changed) {
-      tmp <- as.data.table(newFeatures)[, .(Feature, newFeature)][newFeature != Feature, ]
+      tmp <- as.data.table(newFeatures)[, list(Feature, newFeature)][newFeature != Feature, ]
       mapCol <- unlist(tmp[, "newFeature"])
       names(mapCol) <- paste0("^", unlist(tmp[, "Feature"]), "(?=(\\_{2}.*)|$)")
       nodes$var <- str_replace_all(nodes$var, mapCol)
@@ -121,11 +121,11 @@ stabilitySelection <- function(rules, alpha_error = 1, pi_thr = 0.7, aggregate_t
 
 
   # summary nodes
-  nodes <- nodes[importance < 0, importance := 0][, .(importance = mean(importance), influence = mean(influence * d)),
+  nodes <- nodes[importance < 0, importance := 0][, list(importance = mean(importance), influence = mean(influence * d)),
     by = c("var", "condition")
   ]
-  nodes <- merge(nodes, rules_summary[, .(condition, imp, n, len)], all.x = TRUE, by = "condition")[
-    , .(
+  nodes <- merge(nodes, rules_summary[, list(condition, imp, n, len)], all.x = TRUE, by = "condition")[
+    , list(
       importance = sum(importance * imp * n),
       influence = sum(influence * imp * n) / sum(imp * n)
     ),
@@ -133,14 +133,14 @@ stabilitySelection <- function(rules, alpha_error = 1, pi_thr = 0.7, aggregate_t
   ]
 
   # summary edges
-  edges <- edges[is.na(importance), importance := 0][, .(
+  edges <- edges[is.na(importance), importance := 0][, list(
     importance = mean(importance), influence = mean(influence * (d.x + d.y) / 2),
     association_sign = mean(d.x * d.y)
   ),
   by = c("x", "y", "condition")
   ]
-  edges <- merge(edges, rules_summary[, .(condition, imp, n, len)], all.x = TRUE, by = "condition")[
-    , .(
+  edges <- merge(edges, rules_summary[, list(condition, imp, n, len)], all.x = TRUE, by = "condition")[
+    , list(
       importance = sum(importance * imp * n),
       influence = sum(influence * imp * n) / sum(imp * n),
       association_sign = sum(association_sign * imp * n) / sum(imp * n)

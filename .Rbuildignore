@@ -3,3 +3,7 @@
 ^doc$
 ^Meta$
 ^LICENSE\.md$
+^figures$
+^\.git*
+^\.RData$
+cran-comments.md

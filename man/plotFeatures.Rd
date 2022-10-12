@@ -18,6 +18,12 @@ plotFeatures(
 
 \item{levels_order}{optional, order for variables levels on the influence plot}
 
+\item{colour_low}{colour for the negative feature influence values (default: yellowish)}
+
+\item{colour_mid}{colour for the null feature influence values (default: light grey)}
+
+\item{colour_high}{colour for the positive feature influence values (default: blue)}
+
 \item{return_all}{TRUE, returns the table of feature importance and influences and each plot separated (default = FALSE).}
 }
 \value{

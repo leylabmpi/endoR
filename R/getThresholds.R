@@ -1,4 +1,7 @@
 #' Get thresholds to discretize variables according to their split in tree ensemble models
+#' @param conditions character vector with all conditions from which to find the thresholds
+#' @param data data to discretize
+#' @param Kmax numeric, maximal number of categories for each variable (default: Kmax = 2).
 #' @export
 
 getThresholds <- function(conditions, data, Kmax = 2) {

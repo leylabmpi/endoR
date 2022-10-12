@@ -11,7 +11,7 @@ taxa2vector <- function(taxa_table) {
   taxa_table$s <- paste(taxa_table$g, taxa_table$s, sep = "__s_")
 
   ### Vectorize the taxa_table table
-  tax_vector <- unique(unlist(setDT(taxa_table)[, .(k, p, c, o, f, g, s)]))
+  tax_vector <- unique(unlist(setDT(taxa_table)[, list(k, p, c, o, f, g, s)]))
 
   ### Text formatting:
   # no punctuation or weird symbole, only '_'
@@ -28,6 +28,7 @@ taxa2vector <- function(taxa_table) {
 
 
 #' Transform character strings to be compatible with endoR functions.
+#' @param x character string or vector
 #' @export
 compatibleNames <- function(x) {
   x %>%

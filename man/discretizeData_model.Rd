@@ -7,7 +7,9 @@
 discretizeData_model(data, conditions, Kmax = 2, return_split = FALSE)
 }
 \arguments{
-\item{data}{data to discretize.}
+\item{data}{data to discretize}
+
+\item{conditions}{character vector with all conditions from which to find the thresholds}
 
 \item{Kmax}{numeric, maximal number of categories for each variable (default: Kmax = 2).}
 

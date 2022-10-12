@@ -104,7 +104,7 @@ rules <- model2DE_resampling(model = titanic_rf, model_type = 'ranger'
                                  , discretize = TRUE, K = 2
                                  , prune = TRUE, maxDecay = 0.05, typeDecay = 2 
                                  , filter = FALSE
-                                 , in_parallel = TRUE, n_cores = 5
+                                 , in_parallel = TRUE, n_cores = 2
 )
 ```
 
@@ -232,7 +232,7 @@ preclu <- preCluster(model = titanic_rf, model_type = 'ranger'
                   , times = 5 # number of bootstraps
                   , sample_weight = samp_weight # sample weight for resampling
                   , discretize = TRUE, K = 2
-                  , in_parallel = TRUE, n_cores = 3)
+                  , in_parallel = TRUE, n_cores = 2)
 ```
 
 ## Run endoR in parallel on each bootstrap

@@ -114,7 +114,6 @@ decisions2FullDummy <- function(rules, data, in_parallel = FALSE, n_cores = dete
 
 ##########################################################
 
-#' @export
 perlevelRule <- function(rule) {
   # if there isn't any categorical variable, stop directly
   if (str_detect(rule["condition"], pattern = "%in%") == FALSE) {
@@ -153,7 +152,6 @@ perlevelRule <- function(rule) {
 
 #################################
 
-#' @export
 singleRulePerLevel <- function(rule) {
   colN <- names(rule)[which(names(rule) != "condition")]
 

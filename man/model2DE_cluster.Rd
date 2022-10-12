@@ -10,7 +10,7 @@ model2DE_cluster(partition)
 \item{partition}{a vector with row numbers to subset data.}
 }
 \description{
-Function to with the Q() function from the clustermq R-package with the following arguments in export: 
+Function to with the Q() function from the clustermq R-package with the following arguments in export:
 data, target, exec, classPos, dummy_var, prune, maxDecay, typeDecay, filter, in_parallel, n_cores.
 See preCluster() to obtain the list of boostraps resamples, the discretized data and exec dataframe with decisions.
 }

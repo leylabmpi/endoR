@@ -6,6 +6,13 @@
 \usage{
 getThresholds(conditions, data, Kmax = 2)
 }
+\arguments{
+\item{conditions}{character vector with all conditions from which to find the thresholds}
+
+\item{data}{data to discretize}
+
+\item{Kmax}{numeric, maximal number of categories for each variable (default: Kmax = 2).}
+}
 \description{
 Get thresholds to discretize variables according to their split in tree ensemble models
 }

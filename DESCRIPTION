@@ -13,12 +13,9 @@ LazyData: true
 Suggests:
     knitr,
     rmarkdown,
-    ranger,
-    xgboost,
-    parallel,
     testthat (>= 3.0.0)
-Imports: data.table, dplyr, ggplot2, ggraph, igraph, inTrees, stringr, caret, ggpubr
-RoxygenNote: 7.1.1
+Imports: rlang, data.table, dplyr, ggplot2, ggraph, igraph, inTrees, stringr, caret, ggpubr, ranger, xgboost, parallel, clustermq, utils, randomForest, tidyverse
+RoxygenNote: 7.2.0
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)

@@ -11,8 +11,6 @@
 #' @param mode whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').
 #' @param K numeric, number of categories to create from numeric variables (default: K = 2).
 #' @param splitV instead of running internally discretizeData, one can provide a list with, for each variable to discretize in rules, the thresholds delimiting each new category.
-#' @param data_ctg discretized data, if splitV is passed. Necessary to re-compute the metrics (if column 'err' in rules).
-#' @param return_data if TRUE, discretized data are also returned.
 #' @param in_parallel if TRUE, the function is run in parallel.
 #' @param n_cores if in_parallel = TRUE, and no cluster has been passed: number of cores to use, default is detectCores() - 1.
 #' @param cluster the cluster to use to run the function in parallel.
@@ -171,7 +169,6 @@ discretizeSingleRule <- function(rule, splitV) {
 
 
 ###################################################
-#' @export
 getNewRule <- function(v, rule, splitV) {
   vIx <- which(names(rule) == v)
 

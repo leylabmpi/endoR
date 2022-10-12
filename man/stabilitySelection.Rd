@@ -27,7 +27,7 @@ stabilitySelection(
 A list with all decisions from all bootstrasps, the summary of decisions across bootstraps, the feature and interaction importance and influence in the nodes and edges dataframes, as well as the the decision-wise feature and interaction importances and influences the nodes_agg and edges_agg dataframes.
 }
 \description{
-Performs stability selection after bootstrapping with the model2DE_cluster or model2DE_resampling functions. 
+Performs stability selection after bootstrapping with the model2DE_cluster or model2DE_resampling functions.
 The procedure is adapted from Meinshausenand and Buehlmann (2010): the best decisions from each bootstrap are pre-seleected and the the ones that were pre-selected in a certain fraction of bootstraps are included in the stable decision ensemble.
 The decision importances and multiplicities are averaged across bootstraps. Decision-wise feature and interaction importances and influences are averaged across bootstraps before computing the feature and interaction importances and influences from the stable decision ensemble.
 }

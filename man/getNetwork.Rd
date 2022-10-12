@@ -9,10 +9,8 @@ getNetwork(
   data,
   target,
   classPos = NULL,
-  additional_decisions = NULL,
   aggregate_taxa = FALSE,
   taxa = NULL,
-  type = "coarse",
   in_parallel = FALSE,
   n_cores = detectCores() - 1,
   cluster = NULL
@@ -21,11 +19,15 @@ getNetwork(
 \arguments{
 \item{rules}{the decision ensemble.}
 
-\item{data}{data from which to measure characteristic.}
+\item{data}{data from which to measure decision metrics.}
 
 \item{target}{response variable.}
 
 \item{classPos}{the positive class predicted by decisions.}
+
+\item{aggregate_taxa}{should taxa be aggregated at the genus level (if species have lower importance than their genus) or species level (if a genus is represented by a unique species)}
+
+\item{taxa}{if aggregate_taxa = TRUE, a data.frame with all taxa included in the dataset: columns = taxonomic ranks (with columns f, g, and s)}
 
 \item{in_parallel}{if TRUE, the function is run in parallel.}
 
@@ -37,6 +39,6 @@ getNetwork(
 A list with in the nodes and edges dataframes, the feature and interaction importance and influence; the decision-wise feature and interaction importances and influences are contained in the nodes_agg and edges_agg dataframes.
 }
 \description{
-Takes a decision ensemble and measures the importance and influence of each feature and pair of features to create a network. 
+Takes a decision ensemble and measures the importance and influence of each feature and pair of features to create a network.
 For categorical variables or discretized ones, the importance and influence are calculated per level. See featureImportance to obtain the overall feature importance.
 }

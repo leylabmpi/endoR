@@ -10,7 +10,7 @@ aggregateTaxa_coarse <- function(taxa, weights, thr = NULL) {
   if (!("data.table" %in% class(taxa))) {
     taxa <- as.data.table(taxa)[, Feature := as.character(Feature)]
   }
-  taxa <- merge(taxa, weights[, .(Feature, weight)], by = "Feature", all.x = TRUE)
+  taxa <- merge(taxa, weights[, list(Feature, weight)], by = "Feature", all.x = TRUE)
   setorder(taxa, weight)
   taxa <- taxa[!is.na(f), ][, `:=`(newFeature = Feature, newWeight = weight, ix = .I)]
   tax_col <- which(colnames(taxa) %in% c("f", "g", "s"))

@@ -13,19 +13,19 @@ aggregateTaxa(
 )
 }
 \arguments{
-\item{taxa}{taxa should be a vector with the long format of the features of the taxa table with taxonomic levels as columns - cf taxa2vector; or a data.frame with the feature name and all its other coarser/thiner levels.}
+\item{taxa}{taxa should be a data.frame with the feature name and all its other coarser/thinner levels (columns: 'Feature', 'f', 'g', 's')}
 
 \item{features}{if taxa is a vector or a data.frame that lacks all levels, a vector of the features to be checked.}
 
 \item{weights}{a data.frame with a column Feature and a column weight; for type = 'both' or 'coarse' only.}
 
-\item{thr}{numeric, value after which the algorithm should stop looking for better ranks in a taxa banch; for type = 'both' or 'coarse' only. If NULL, the median of weights is used.}
+\item{thr}{numeric, value after which the algorithm should stop looking for better ranks in a taxonomic branch; for type = 'both' or 'coarse' only. If NULL, the median of weights is used.}
 
-\item{type}{character. If 'coarse', finer levels are aggregated into their coarser one if it has a better rank. If 'fine' then coarser levels are aggregated into a finer level if it has a better rank and is unique, ie there is a unique finer level for that coarser level. If 'both', both aggregation steps are seuqentially performed.}
+\item{type}{character. If 'coarse', finer levels are aggregated into their coarser one if it has a better rank. If 'fine' then coarser levels are aggregated into a thinner level if it has a better rank and is unique, i.e. there is a unique finer level for that coarser level. If 'both', both aggregation steps are seuqentially performed.}
 }
 \value{
 A dataframe with aggregated features in the "Feature" column, and the 'recipient' taxa in the "newFeature" column.
 }
 \description{
-This function aggregates taxa according to their rank from a measure passed in weights: if a taxa has a lower rank than its coarser level, type = 'coarse', it is aggregated into the coarser; if their is a unique thiner level with a better rank than the coarser one, then the coarser is aggregated into the thiner Comparison is done only for the family, genus and specie levels.
+This function aggregates taxa according to their rank from a measure passed in weights: if a taxa has a lower rank than its coarser level, type = 'coarse', it is aggregated into the coarser; if their is a unique thinner level with a better rank than the coarser one, then the coarser is aggregated into the thiner Comparison is done only for the family, genus and specie levels.
 }

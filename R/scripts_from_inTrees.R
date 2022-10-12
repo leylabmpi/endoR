@@ -162,9 +162,6 @@ ruleList2Exec_endoR <-
 
 ########################################
 
-
-
-#' @export
 Ranger2List_endoR <- function(rf_ranger) {
   # fix the indexing of variables
   formatRanger <- function(tree) {

@@ -13,7 +13,16 @@
 #' @param classPos the positive class predicted by decisions
 #' @param ntree number of trees to use from the model (default = all)
 #' @param maxdepth maximal node depth to use for extracting rules (by default, full branches are used).
-#' @param ... arguments to be passed to pruneDecisions, discretizeDecisions, filterDecisionsImportances.
+#' @param discretize should numeric variables be transformed to categorical variables? If TRUE, K categories are created for each variable based on their distribution in data (mode = 'data') or based on the thresholds used in the decision ensemble (mode = 'model')
+#' @param K numeric, number of categories to create from numeric variables (default: K = 2).
+#' @param mode whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').
+#' @param prune should unimportant features be removed from decisions (= pruning)? Features are removed by calculating the difference in prediction error of the decision with versus without the feature. If the difference is small (< maxDecay), then the feature is removed. The difference can be absolute (typeDecay = 1) or relative (typeDecay = 2, default). See pruneDecisions() for details.
+#' @param maxDecay when pruning, threshold for the increase in error; if maxDecay = -Inf, no pruning is done; if maxDecay = 0, only variables increasing the error are pruned from decisions.
+#' @param typeDecay if typeDecay = 1, the absolute increase in error is computed, and the relative one is computed if typeDecay = 2 (default).
+#' @param filter should decisions with low importance be removed from the decision ensemble? If TRUE, then decisions are filtered in a heuristic manner according to their importance and multiplicity (see filterDecisionsImportances() ).
+#' @param min_imp minimal relative importance of the decisions that must be kept, the threshold to remove decisions is thus going to take lower values than max(imp)*min_imp.
+#' @param aggregate_taxa should taxa be aggregated at the genus level (if species have lower importance than their genus) or species level (if a genus is represented by a unique species)
+#' @param taxa if aggregate_taxa = TRUE, a data.frame with all taxa included in the dataset: columns = taxonomic ranks (with columns f, g, and s)
 #' @param exec if decisions have already been extracted, datatable with a 'condition' column.
 #' @param light if FALSE, returns all intermediary decision ensembles; default = TRUE
 #' @param in_parallel if TRUE, the function is run in parallel
@@ -31,9 +40,10 @@ model2DE <- function(model, model_type, data, target,
                      # pruning parameters
                      , prune = TRUE, maxDecay = 0.05, typeDecay = 2
                      # aggregation parameters
-                     , aggregate_taxa = FALSE, taxa = NULL, type = "both"
+                     , aggregate_taxa = FALSE, taxa = NULL#, type = "both"
                      # filter parameters
-                     , filter = TRUE, min_imp = 0.7, ntest = 100
+                     , filter = TRUE, min_imp = 0.7
+
                      # parameters when in resampling
                      , exec = NULL
                      # parallelization
@@ -53,7 +63,6 @@ model2DE <- function(model, model_type, data, target,
   if (in_parallel == TRUE) {
     if (is.null(cluster) == TRUE) {
       message("Initiate parallelisation ... ")
-      require(parallel)
       cluster <- makeCluster(n_cores)
       clusterEvalQ(cluster, library(endoR))
       clusterEvalQ(cluster, library(stringr))
@@ -194,7 +203,7 @@ model2DE <- function(model, model_type, data, target,
   ##### GET THE NETWORK #####
   coocc <- getNetwork(
     rules = rules, data = data, target = target, classPos = classPos,
-    aggregate_taxa = aggregate_taxa, taxa = taxa, type = type,
+    aggregate_taxa = aggregate_taxa, taxa = taxa,
     in_parallel = in_parallel, n_cores = n_cores, cluster = cluster
   )
   if (aggregate_taxa == TRUE) {

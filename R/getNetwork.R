@@ -4,17 +4,19 @@
 #' For categorical variables or discretized ones, the importance and influence are calculated per level. See featureImportance to obtain the overall feature importance.
 #'
 #' @param rules the decision ensemble.
-#' @param data data from which to measure characteristic.
+#' @param data data from which to measure decision metrics.
 #' @param target response variable.
 #' @param classPos the positive class predicted by decisions.
+#' @param aggregate_taxa should taxa be aggregated at the genus level (if species have lower importance than their genus) or species level (if a genus is represented by a unique species)
+#' @param taxa if aggregate_taxa = TRUE, a data.frame with all taxa included in the dataset: columns = taxonomic ranks (with columns f, g, and s)
 #' @param in_parallel if TRUE, the function is run in parallel.
 #' @param n_cores if in_parallel = TRUE, and no cluster has been passed: number of cores to use.
 #' @param cluster the cluster to use to run the function in parallel.
 #' @return A list with in the nodes and edges dataframes, the feature and interaction importance and influence; the decision-wise feature and interaction importances and influences are contained in the nodes_agg and edges_agg dataframes.
 #' @export
 getNetwork <- function(rules, data, target, classPos = NULL,
-                       additional_decisions = NULL,
-                       aggregate_taxa = FALSE, taxa = NULL, type = "coarse",
+                       #additional_decisions = NULL,
+                       aggregate_taxa = FALSE, taxa = NULL, #type = "coarse",
                        in_parallel = FALSE, n_cores = detectCores() - 1, cluster = NULL) {
   if (in_parallel == TRUE) {
     if (is.null(cluster) == TRUE) {
@@ -36,14 +38,14 @@ getNetwork <- function(rules, data, target, classPos = NULL,
   res$featNames <- featNames
 
   ## Get the additional decision metrics tables
-  if (is.null(additional_decisions)) {
+  #if (is.null(additional_decisions)) {
     rulesAdd <- getComplements(
       rules = rules, data = data, target = target, classPos = classPos,
       in_parallel = in_parallel, n_cores = n_cores, cluster = cluster
     )
-  } else {
-    rulesAdd <- additional_decisions
-  }
+  #} else {
+  #  rulesAdd <- additional_decisions
+  #}
   res$rulesAdd <- rulesAdd
 
   if (is.numeric(target) == FALSE) {
@@ -55,10 +57,10 @@ getNetwork <- function(rules, data, target, classPos = NULL,
 
 
   ## Get nodes - part 1
-  nodes <- copy(rulesAdd$rm)[, .(ruleID, var, pred, support)]
+  nodes <- copy(rulesAdd$rm)[, list(ruleID, var, pred, support)]
   setnames(nodes, old = "pred", new = "pred.rm")
   setnames(nodes, old = "support", new = "s.rm")
-  nodes <- merge(nodes, copy(rulesAdd$original)[, .(ruleID, condition, support, err, pred, imp, n)],
+  nodes <- merge(nodes, copy(rulesAdd$original)[, list(ruleID, condition, support, err, pred, imp, n)],
     by = "ruleID", all.x = TRUE
   )
 
@@ -75,7 +77,7 @@ getNetwork <- function(rules, data, target, classPos = NULL,
   }
   nodes$err.rm <- tmp
 
-  nodes <- merge(nodes, copy(rulesAdd$directions)[, .(ruleID, var, d)],
+  nodes <- merge(nodes, copy(rulesAdd$directions)[, list(ruleID, var, d)],
     by = c("ruleID", "var"), all.x = TRUE
   )
   nodes <- nodes[, "importance" := round(err.rm, digits = 10) - round(err, digits = 10)][
@@ -95,7 +97,7 @@ getNetwork <- function(rules, data, target, classPos = NULL,
     setnames(featImp, old = "varN", new = "var")
     featImp <- unique(featImp[, "Feature" := str_extract(var, pattern = ".*(?=\\_{2})")][
       is.na(Feature), "Feature" := var
-    ][, .(Feature, importance)][
+    ][, list(Feature, importance)][
       , importance := sum(importance),
       by = Feature
     ])
@@ -104,7 +106,7 @@ getNetwork <- function(rules, data, target, classPos = NULL,
 
     newFeatures <- aggregateTaxa(taxa = taxa, features = featImp$Feature, weights = featImp)
     if ("Recipient" %in% newFeatures$changed) {
-      tmp <- as.data.table(newFeatures)[, .(Feature, newFeature)][newFeature != Feature, ]
+      tmp <- as.data.table(newFeatures)[, list(Feature, newFeature)][newFeature != Feature, ]
       mapCol <- unlist(tmp[, "newFeature"])
       names(mapCol) <- paste0("^", unlist(tmp[, "Feature"]), "(?=(\\_{2}.*)|$)")
       featNames$varN <- str_replace_all(featNames$varN, mapCol)
@@ -161,7 +163,7 @@ getNetwork <- function(rules, data, target, classPos = NULL,
   setnames(nodes, old = "varN", new = "var")
 
   # Get the average per variable
-  nodes_mean <- copy(nodes)[importance < 0, importance := 0][, .(
+  nodes_mean <- copy(nodes)[importance < 0, importance := 0][, list(
     importance = sum(importance * imp * n),
     influence = sum(influence * imp * n) / sum(imp * n)
   ),
@@ -179,7 +181,7 @@ getNetwork <- function(rules, data, target, classPos = NULL,
   setnames(edges, old = "varN", new = "y")
 
 
-  edges_mean <- copy(edges)[is.na(importance), importance := 0][, .(
+  edges_mean <- copy(edges)[is.na(importance), importance := 0][, list(
     importance = sum(importance * imp * n),
     influence = sum(influence * imp * n) / sum(imp * n),
     association_sign = sum(d.x * d.y * imp * n) / sum(imp * n)
@@ -198,7 +200,6 @@ getNetwork <- function(rules, data, target, classPos = NULL,
 
 ##########################################################
 
-#' @export
 ### Loop the variable in decisions
 interactionVariables <- function(rule) {
   var <- unlist(str_extract_all(rule["condition"], pattern = "(?<=X\\[,)[:digit:]+(?=\\])"))
@@ -213,8 +214,6 @@ interactionVariables <- function(rule) {
 
 ##########################################################
 
-
-#' @export
 rmError <- function(rule, data, target, type = "reg") {
   ruleExec <- paste("which(", rule["condition"], ")")
   ruleExec <- gsub(ruleExec, pattern = "X\\[,", replacement = "data\\[,")

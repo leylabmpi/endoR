@@ -15,6 +15,8 @@ decisionImportance(
 )
 }
 \arguments{
+\item{rules}{a data.frame with a column "condition" or a vector with name "condition".}
+
 \item{data}{data from which to get the decision support.}
 
 \item{target}{response variable.}
@@ -26,8 +28,6 @@ decisionImportance(
 \item{n_cores}{if in_parallel = TRUE, and no cluster has been passed: number of cores to use.}
 
 \item{cluster}{the cluster to use to run the function in parallel.}
-
-\item{rulesa}{a data.frame with a column "condition" or a vector with name "condition".}
 }
 \value{
 the data.frame passed in rules with the gain and importance of the each decision.

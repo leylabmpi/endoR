@@ -49,11 +49,15 @@ preCluster(
 
 \item{discretize}{if TRUE, discretization is performed with K categories (discretizeDecisions, by default = FALSE).}
 
+\item{K}{numeric, number of categories to create from numeric variables (default: K = 2).}
+
+\item{mode}{whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').}
+
+\item{seed}{which seed to use to make the random bootstraps - it is fixed for reproducibility}
+
 \item{in_parallel}{if TRUE, the function is run in parallel.}
 
 \item{n_cores}{if in_parallel = TRUE, and no cluster has been passed: number of cores to use.}
-
-\item{cluster}{the cluster to use to run the function in parallel.}
 }
 \value{
 A list with the row numbers of partitioned data, the rules originally extracted from the model and new data if discretization was performed.
