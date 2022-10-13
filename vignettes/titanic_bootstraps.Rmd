@@ -232,7 +232,7 @@ preclu <- preCluster(model = titanic_rf, model_type = 'ranger'
                   , times = 5 # number of bootstraps
                   , sample_weight = samp_weight # sample weight for resampling
                   , discretize = TRUE, K = 2
-                  , in_parallel = TRUE, n_cores = 2)
+                  , in_parallel = FALSE) 
 ```
 
 ## Run endoR in parallel on each bootstrap
@@ -240,7 +240,6 @@ preclu <- preCluster(model = titanic_rf, model_type = 'ranger'
 Let's set the clustermq parameters:
 ```{r}
 options(clustermq.scheduler = "multiprocess")
-n_cores <- parallel::detectCores()-1 # =3 for me
 ```
 
 ```{r}
@@ -252,7 +251,7 @@ rules <- Q(model2DE_cluster
                 , classPos = 'yes'
                 , prune = TRUE, maxDecay = 0.05, typeDecay = 2 
                 , filter = FALSE
-                , in_parallel = TRUE, n_cores = n_cores
+                , in_parallel = TRUE, n_cores = 1 # keep to 1 to pass CRAN check but could be higher given your resources
                )
   , n_jobs= 2 # 2 bootstraps will be processed in parallel 
   , pkgs=c('data.table', 'parallel', 'caret', 'stringr', 'scales', 'dplyr'
