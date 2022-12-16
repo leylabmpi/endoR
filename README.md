@@ -7,7 +7,7 @@ Code and manual of the endoR R-package.
 - author: Albane Ruaud [albane.ruaud@tuebingen.mpg.de](mailto:albane.ruaud@tuebingen.mpg.de)
 - maintainer: Albane Ruaud [albane.ruaud@tuebingen.mpg.de](mailto:albane.ruaud@tuebingen.mpg.de)
 
-Preprint: Albane Ruaud, Niklas A Pfister, Ruth E Ley, Nicholas D Youngblut. Interpreting tree ensemble machine learning models with endoR. bioRxiv (2022). DOI: [10.1101/2022.01.03.474763](https://www.biorxiv.org/content/10.1101/2022.01.03.474763v1)
+Article: Albane Ruaud, Niklas A Pfister, Ruth E Ley, Nicholas D Youngblut. Interpreting tree ensemble machine learning models with endoR. Plos Computational Biology (2022). DOI: [10.1371/journal.pcbi.1010714](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1010714)
 
 
 # Abstract
