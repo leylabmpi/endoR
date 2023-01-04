@@ -1,5 +1,5 @@
 # endoR
-Code and manual of the endoR R-package.
+Code and manual of the endoR R-package. A Python version is currently a work in progress and I hope to release it soon - any help welcome ;) 
 
 [![DOI](https://zenodo.org/badge/349814633.svg)](https://zenodo.org/badge/latestdoi/349814633)
 
