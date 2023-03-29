@@ -14,9 +14,9 @@ titanic
 This is data to be included in my package
 }
 \references{
-\url{https://cran.r-project.org/web/packages/titanic/README.html}
+\url{https://cran.r-project.org/package=titanic}
 }
 \author{
-Albane Ruaud \email{albane.ruaud@tuebingen.mpg.de}
+Paul Hendricks \email{paul.hendricks.2013@owu.edu}
 }
 \keyword{datasets}

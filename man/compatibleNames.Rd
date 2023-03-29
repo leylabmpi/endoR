@@ -12,3 +12,7 @@ compatibleNames(x)
 \description{
 Transform character strings to be compatible with endoR functions.
 }
+\examples{
+x <- c('hello.world__I am;happy', 'me-2')
+compatibleNames(x)
+}

@@ -1,0 +1,39 @@
+name: EndoR
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: build (${{ matrix.r-version }}, ${{ matrix.os }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        r-version: [4.1]
+    steps:
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        miniconda-version: 'latest'
+        auto-update-conda: true
+        python-version: '3.10'
+        channels: conda-forge,bioconda,defaults
+        activate-environment: endor_env
+    - name: conda env setup
+      shell: bash -l {0}
+      run: |
+        conda install -y mamba
+        mamba install -y r-base=${{ matrix.r-version }} r-renv r-nloptr r-data.table r-dplyr r-ggplot2 r-ggraph r-igraph r-stringr
+    - uses: actions/checkout@v2	
+    - name: renv install
+      shell: bash -l {0}
+      run: |
+        R -e 'renv::install("rstudio/renv")'
+        R -e 'renv::install("softwaredeng/inTrees/inTrees.Rcheck/inTrees")'
+        R -e 'renv::install("nick-youngblut/endoR")'
+    - name: Package unit tests
+      shell: bash -l {0}
+      run: |
+        R -e 'library(endoR)'

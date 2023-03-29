@@ -15,6 +15,8 @@
 #' @param text_size size of node labels.
 #' @param seed the seed to use for generating the network.
 #' @return a ggraph object
+#'
+#' @example examples/iris_basic.R
 #' @export
 
 plotNetwork <- function(decision_ensemble, path_length = Inf,
@@ -114,7 +116,7 @@ plotNetwork <- function(decision_ensemble, path_length = Inf,
       color = "black", shape = 21
     ) + geom_node_text(aes(label = name),
       repel = TRUE, size = text_size
-    ) + theme_graph() + guides(
+    ) + theme_graph(base_family="sans") + guides(
       edge_alpha = "none",
       edge_linetype = "none", edge_colour = "none"
     ) + scale_edge_linetype_manual(values = linetype) +

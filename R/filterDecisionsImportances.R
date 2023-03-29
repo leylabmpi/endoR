@@ -7,6 +7,8 @@
 #' @param rules data.frame corresponding to the decisions, with all their metrics.
 #' @param min_imp minimal relative importance of the decisions that must be kept, the threshold to remove decisions is thus going to take lower values than max(imp)*min_imp.
 #' @return The decision ensemble from which decisions with the lowest errors and/or importances have been removed, or are indicated in a column "filt_err"/"filt_imp".
+#'
+#' @example examples/iris_each_function.R
 #' @export
 filterDecisionsImportances <- function(rules, min_imp = 0.7) {
   if (("data.table" %in% class(rules)) == FALSE) {

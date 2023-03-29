@@ -16,7 +16,7 @@
 #' @param prune should unimportant features be removed from decisions (= pruning)? Features are removed by calculating the difference in prediction error of the decision with versus without the feature. If the difference is small (< maxDecay), then the feature is removed. The difference can be absolute (typeDecay = 1) or relative (typeDecay = 2, default). See pruneDecisions() for details.
 #' @param maxDecay when pruning, threshold for the increase in error; if maxDecay = -Inf, no pruning is done; if maxDecay = 0, only variables increasing the error are pruned from decisions.
 #' @param typeDecay if typeDecay = 1, the absolute increase in error is computed, and the relative one is computed if typeDecay = 2 (default).
-#' @param discretize should numeric variables be transformed to categorical variables? If TRUE, K categories are created for each variable based on their distribution in data (mode = 'data') or based on the thresholds used in the decision ensemble (mode = 'model') 
+#' @param discretize should numeric variables be transformed to categorical variables? If TRUE, K categories are created for each variable based on their distribution in data (mode = 'data') or based on the thresholds used in the decision ensemble (mode = 'model')
 #' @param K numeric, number of categories to create from numeric variables (default: K = 2).
 #' @param mode whether to discretize variables based on the data distribution (default, mode = 'data') or on the data splits in the model (mode = 'model').
 #' @param filter should decisions with low importance be removed from the decision ensemble? If TRUE, then decisions are filtered in a heuristic manner according to their importance and multiplicity (see filterDecisionsImportances() ).
@@ -27,6 +27,9 @@
 #' @param cluster the cluster to use to run the function in parallel
 #' @return A list with the row numbers of partitioned data, the rules originally extracted from the model, a list with results from each bootstrap (use stabilitySelection to obtain the stable decison ensemble).
 #' @import data.table
+#'
+#' @example examples/iris_bootstraps.R
+#'
 #' @export
 model2DE_resampling <- function(model, model_type, data, target, classPos = NULL,
                                 times = 10, p = .5, sample_weight = NULL,

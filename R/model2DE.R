@@ -30,6 +30,9 @@
 #' @param cluster the cluster to use to run the function in parallel
 #' @return A list with the final decision ensemble, if numeric variables were discretized in decisions, the discretized data, edges and nodes to make a network (plotNetwork and plotFeatures).
 #' @import data.table
+#'
+#' @example examples/iris_basic.R
+#'
 #' @export
 model2DE <- function(model, model_type, data, target,
                      ntree = "all", maxdepth = Inf,

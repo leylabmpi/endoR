@@ -5,12 +5,13 @@
 #' The decision importances and multiplicities are averaged across bootstraps. Decision-wise feature and interaction importances and influences are averaged across bootstraps before computing the feature and interaction importances and influences from the stable decision ensemble.
 #' @param rules list of bootstrap results
 #' @param alphas expected number of false positive decision selected (default = 1).
-#' @param data data for which to calculate how many samples follow each decision. Columns should be the same as for fitting the decision ensemble but samples can be any. 
+#' @param data data for which to calculate how many samples follow each decision. Columns should be the same as for fitting the decision ensemble but samples can be any.
 #' @param decision_ensembles should the decision ensemble be returned?
 #' @param pi_thr fraction of bootstraps in which a decision should have been selected in to be included in the stable decision ensemble (default = 0.7).
 #' @param aggregate_taxa should taxa be aggregated at the genus level (if species have lower importance than their genus) or species level (if a genus is represented by a unique species)
 #' @param taxa if aggregate_taxa = TRUE, a data.frame with all taxa included in the dataset: columns = taxonomic ranks (with columns f, g, and s)
 #' @return A list with all decisions from all bootstrasps, the summary of decisions across bootstraps, the feature and interaction importance and influence in the nodes and edges dataframes, as well as the the decision-wise feature and interaction importances and influences the nodes_agg and edges_agg dataframes.
+#' @example examples/iris_bootstraps.R
 #' @export
 
 evaluateAlpha <- function(rules, alphas = c(5, 10, 15, 20, 30, 50, 75), pi_thr = 0.7,

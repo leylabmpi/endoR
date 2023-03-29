@@ -9,6 +9,9 @@
 #' @param aggregate_taxa should taxa be aggregated at the genus level (if species have lower importance than their genus) or species level (if a genus is represented by a unique species)
 #' @param taxa if aggregate_taxa = TRUE, a data.frame with all taxa included in the dataset: columns = taxonomic ranks (with columns f, g, and s)
 #' @return A list with all decisions from all bootstrasps, the summary of decisions across bootstraps, the feature and interaction importance and influence in the nodes and edges dataframes, as well as the the decision-wise feature and interaction importances and influences the nodes_agg and edges_agg dataframes.
+#'
+#' @example examples/iris_bootstraps.R
+#'
 #' @export
 stabilitySelection <- function(rules, alpha_error = 1, pi_thr = 0.7, aggregate_taxa = FALSE, taxa = NULL) {
   agg_res <- list()

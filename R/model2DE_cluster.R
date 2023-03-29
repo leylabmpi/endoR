@@ -5,6 +5,7 @@
 #' See preCluster() to obtain the list of boostraps resamples, the discretized data and exec dataframe with decisions.
 #'
 #' @param partition a vector with row numbers to subset data.
+#' @example examples/iris_bootstraps.R
 #' @export
 model2DE_cluster <- function(partition) {
   #library(data.table)
@@ -17,9 +18,14 @@ model2DE_cluster <- function(partition) {
     in_parallel = in_parallel, n_cores = n_cores,
     light = TRUE
   )
+
+  # get the position of the last set of computed rules
+  tmp <- str_which(names(res), pattern = 'rules')
+  tmp <- tmp[length(tmp)]
+
   res <- list(
     "pdecisions" = res$n_decisions,
-    "rules" = res[[length(res) - 4]],
+    "rules" = res$rules,
     "nodes_agg" = res$nodes_agg, "edges_agg" = res$edges_agg
   )
   return(res)

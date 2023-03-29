@@ -43,7 +43,7 @@ utils::globalVariables(c('Feature', 'Feature_short', 'association_sign'
 
 #' This is data to be included in my package
 #'
-#' @author Albane Ruaud \email{albane.ruaud@tuebingen.mpg.de}
-#' @references \url{https://cran.r-project.org/web/packages/titanic/README.html}
+#' @author Paul Hendricks \email{paul.hendricks.2013@owu.edu}
+#' @references \url{https://cran.r-project.org/package=titanic}
 "titanic"
 

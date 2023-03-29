@@ -7,3 +7,6 @@
 ^\.git*
 ^\.RData$
 cran-comments.md
+\vignettes\titanic_boostraps.Rmd.orig
+^figure$
+^examples$

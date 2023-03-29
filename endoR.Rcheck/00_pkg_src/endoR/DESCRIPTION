@@ -1,0 +1,27 @@
+Package: endoR
+Type: Package
+Title: Interpret and Visualize Stable Tree Ensemble Models
+Version: 0.1.0
+Authors@R: c(person("Albane", "Ruaud", email = "albane.ruaud@tuebingen.mpg.de"
+                  , role = c("aut", "cre"), comment = c(ORCID = "0000-0001-5920-1710"))
+            , person("Houtao", "Deng", role = "ctb"))
+Description: endoR extracts and visualizes how predictive variables contribute to tree ensemble model accuracy. 
+  You provide the model and data, tell endoR which regularization steps you want to obtain stable results, and it will return a plot of the feature importance and influence on the response variable and a decision network.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Suggests: knitr, rmarkdown, ranger, xgboost, parallel, testthat (>=
+        3.0.0)
+Imports: data.table, dplyr, ggplot2, ggraph, igraph, inTrees, stringr,
+        caret, ggpubr
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr
+Depends: R (>= 2.10)
+BugReports: https://github.com/aruaud/endoR/issues
+URL: https://github.com/aruaud/endoR
+Config/testthat/edition: 3
+NeedsCompilation: no
+Packaged: 2022-08-11 14:46:14 UTC; Albane Ruaud
+Author: Albane Ruaud [aut, cre] (<https://orcid.org/0000-0001-5920-1710>),
+  Houtao Deng [ctb]
+Maintainer: Albane Ruaud <albane.ruaud@tuebingen.mpg.de>

@@ -1,0 +1,10 @@
+* using log directory ‘/mnt/c/Users/Albane Ruaud/MPI-EBIO/Ruaud2022/endoR/endoR.Rcheck’
+* using R version 4.0.2 (2020-06-22)
+* using platform: x86_64-conda_cos6-linux-gnu (64-bit)
+* using session charset: UTF-8
+* using option ‘--as-cran’
+* checking for file ‘endoR/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘endoR’ version ‘0.1.0’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ...

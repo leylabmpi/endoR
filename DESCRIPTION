@@ -6,7 +6,7 @@ Authors@R: c(person("Albane", "Ruaud", email = "albane.ruaud@tuebingen.mpg.de"
                   , role = c("aut", "cre"), comment = c(ORCID = "0000-0001-5920-1710"))
             , person("Houtao", "Deng", role = "ctb"))
 Description: Extract and visualize how predictive variables contribute to tree ensemble model accuracy. 
-  You provide the model and data, tell endoR which regularization steps you want to obtain stable results, and it will return a plot of the feature importance and influence on the response variable and a decision network.
+  You provide the model and data, tell endoR which regularization steps you want to obtain stable results, and it will return a plot of the feature importance and influence on the response variable and a decision network. For more details, please refer to our pre-print:  Albane Ruaud, Niklas A Pfister, Ruth E Ley, Nicholas D Youngblut. Interpreting tree ensemble machine learning models with endoR. bioRxiv (2022). <doi: 10.1101/2022.01.03.474763>.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

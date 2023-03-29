@@ -11,6 +11,9 @@
 #' @param n_cores if in_parallel = TRUE, and no cluster has been passed: number of cores to use.
 #' @param cluster the cluster to use to run the function in parallel.
 #' @return a datatable with the rule (column "condition"), error ("err"), prediction ("pred") support, number of variables in the decision rule ("len"). Columns "gain" and "imp" wit hthe gain and importance of teh decision are added if importances were calculated.
+#'
+#' @example examples/iris_each_function.R
+#'
 #' @export
 getDecisionsMetrics <- function(ruleExec, data, target, classPos = NULL,
                                 importances = TRUE,

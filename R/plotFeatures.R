@@ -10,6 +10,8 @@
 #' @param colour_mid colour for the null feature influence values (default: light grey)
 #' @param colour_high colour for the positive feature influence values (default: blue)
 #' @return 2 ggplots arranged in a row with ggpubr; if return_all = TRUE, returns plots separately in a list , as well as the tables used to create plots.
+#'
+#' @example examples/iris_basic.R
 #' @export
 plotFeatures <- function(decision_ensemble, levels_order = NULL,
                          colour_low = "#E69F00", colour_mid = "grey87", colour_high = "#0072B2",

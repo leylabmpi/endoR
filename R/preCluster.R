@@ -21,6 +21,8 @@
 #' @param n_cores if in_parallel = TRUE, and no cluster has been passed: number of cores to use.
 #' @return A list with the row numbers of partitioned data, the rules originally extracted from the model and new data if discretization was performed.
 #' @import data.table
+#'
+#' @example examples/iris_bootstraps.R
 #' @export
 preCluster <- function(model, model_type, data, target,
                        times = 10, p = .5, sample_weight = NULL, classPos = NULL,
@@ -103,7 +105,7 @@ preCluster <- function(model, model_type, data, target,
     res$exec <- exec$rules
   }
 
-  # re-order conditions, because I am not sure where sub-rules don't get properlly sorted...
+  # re-order conditions, because I am not sure where sub-rules don't get properly sorted...
   res$exec <- res$exec[, condition := sapply(condition, function(x) {
     paste(sort(unlist(strsplit(x, split = " & "))), collapse = " & ")
   })]

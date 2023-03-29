@@ -29,6 +29,9 @@ taxa2vector <- function(taxa_table) {
 
 #' Transform character strings to be compatible with endoR functions.
 #' @param x character string or vector
+#' @examples
+#' x <- c('hello.world__I am;happy', 'me-2')
+#' compatibleNames(x)
 #' @export
 compatibleNames <- function(x) {
   x %>%

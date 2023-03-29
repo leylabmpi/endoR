@@ -15,9 +15,10 @@
 #' @param n_cores if in_parallel = TRUE, and no cluster has been passed: number of cores to use, default is detectCores() - 1.
 #' @param cluster the cluster to use to run the function in parallel.
 #'
-#'  @return Decision ensemble with discretized variables in the condition. Decisions with the same condition are aggregated: their importances are summed, and all other metrics are averaged.
+#' @return Decision ensemble with discretized variables in the condition. Decisions with the same condition are aggregated: their importances are summed, and all other metrics are averaged.
 #'
-#'  @export
+#' @example examples/iris_each_function.R
+#' @export
 discretizeDecisions <- function(rules, data = NULL, target, mode = "data",
                                 K = 2, splitV = NULL,
                                 classPos = NULL,

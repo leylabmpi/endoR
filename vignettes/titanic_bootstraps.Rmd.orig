@@ -1,0 +1,297 @@
+---
+title: "endoR: bootstrapping"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{endoR: bootstrapping}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 2.5
+)
+```
+
+This vignette illustrates how to interpret models with endoR and regularization. 
+We will use the titanic data for this purpose: the survival of passengers is 
+being predicted (= target) using information on passengers (e.g., gender, age, 
+etc = features). 
+
+# Preambule
+
+```{r}
+library(tidyverse)
+library(stringr)
+library("ggpubr")
+library(igraph)
+library(ggraph)
+library("inTrees")
+library(ranger)
+library(parallel)
+library(caret)
+library(endoR)
+library(data.table)
+library(clustermq)
+```
+
+```{r}
+sessionInfo()
+```
+
+
+
+# Data
+
+```{r}
+summary(titanic)
+```
+
+# RF
+
+Out of the 2207 passengers, 711 survived and 1496 perished.
+```{r}
+summary(titanic$survived)
+```
+
+Because of the target imbalance, we will use sample weights in the RF model so 
+that as many survivors and non-survivors are used to fit each tree.
+```{r}
+n_yes <- sum(titanic$survived == 'yes')
+n_samp <- length(titanic$survived)
+samp_weight <- round(ifelse(titanic$survived == 'yes', 1-n_yes/n_samp, n_yes/n_samp), digits = 2)
+summary(as.factor(samp_weight))
+```
+
+```{r}
+set.seed(1313)
+titanic_rf <- ranger(x = titanic %>% select(-survived), y = titanic$survived
+                     , case.weights = samp_weight)
+titanic_rf
+```
+
+It's not a very good model (about 1/3 of the survivors are mis-classified), but 
+will be sufficient for the tutorial.
+```{r}
+titanic_rf$confusion.matrix
+```
+
+
+# Bootstrap 
+
+## Run endoR
+
+The function draws `times = 5` sample bootstraps with replacement (by default,
+`p = 0.5` is the fraction of samples drawn). One can use `sample_weight` to 
+change the probability of samples to be drawn - this is useful for imbalanced
+data. 
+
+The function will first extract decisions from the model and discretize 
+variables. Then, the pruning and calculation of the decision-wide feature and 
+interaction importances are performed on each bootstrap. It is advised to run 
+the function in parallel to accelerate it (`in_parallel = TRUE` with, by default, 
+`n_cores = parallel::detectCores()-1`).
+
+```{r}
+rules <- model2DE_resampling(model = titanic_rf, model_type = 'ranger'
+                                 , data = titanic %>% select(-survived)
+                                 , target = titanic$survived, classPos = 'yes'
+                                 , times = 5
+                                 , sample_weight = samp_weight
+                                 , discretize = TRUE, K = 2
+                                 , prune = TRUE, maxDecay = 0.05, typeDecay = 2 
+                                 , filter = FALSE
+                                 , in_parallel = TRUE, n_cores = 2
+)
+```
+
+
+## Stability selection
+
+Stability selection consists in selecting the decisions that were the most 
+important across all bootstraps. It depends on the parameter `alpha` = expected 
+number of false positive decisions. Regardless of alpha, the feature and 
+interaction importances will be much higher for true positive features and 
+interactions  than for false positive ones. Hence, we can set higher values of
+`alpha` to increase the number of recovered true features/interactions (i.e.,
+get a higher recall).
+
+
+Let's have a look at the effect of alpha on the number of stable decisions: we first compute the stable decision ensembles for various alpha values.
+```{r}
+alphas <- evaluateAlpha(rules = rules, alphas = c(1:5, 7, 10)
+                        , data = rules$data)
+```
+
+In the summary table, `n_dec` = number of decisions and `n_samp` = number of 
+samples that can be predicted with the stable decisions.
+```{r}
+alphas$summary_table
+```
+
+- with alpha = 1, we can already predict all samples! 
+- with alpha = 3, we get 5 more decisions... let's go for alpha = 3
+```{r}
+de_final <- stabilitySelection(rules = rules, alpha_error = 3)
+```
+
+
+We can have a look at the selected rules: by default, we have selected stable 
+decisions with `pi=0.7`, the minimal fraction of bootstraps in which a decision 
+should have been important do be selected as stable. Hence, when looking at 
+decisions, we must subset the decisions that were important in 
+`inN >= pi*times = 0.7*5 = 7`. 
+Note that you can find `pi` in `rules$parameters['pi_thr']`.
+
+The `inTrees::presentRules()` function formats the table to include the feature 
+names. 
+```{r}
+de_final$rules_summary %>% subset(inN >= .7*5) %>% 
+     presentRules(colN = colnames(rules$data)) %>% head
+```
+
+## Plots
+
+Let's first plot the feature importance and influence:
+```{r}
+plotFeatures(decision_ensemble = de_final)
+```
+
+This plot is ugly.. we would like the influence plot to be larger than the 
+importance one for clarity. So, we recompute the plotFeatures with 
+`return_all = TRUE` to get the 2 individual plots. We can also provide the 
+order of levels to tidy the influence plot.
+```{r}
+p_feat <- plotFeatures(decision_ensemble = de_final, return_all = TRUE
+      , levels_order = c('male', 'female'
+                         , 'engineering crew', 'restaurant staff', 'deck crew'
+                                , 'victualling crew' , '3rd', '2nd', '1st'
+                         , 'Belfast', 'Cherbourg', 'Queenstown', 'Southampton'
+                         , 'Low', 'Medium', 'High')
+                      )
+names(p_feat)
+```
+
+Note that each plot was created with `ggplot2` so we can modify them as wanted; 
+for instance, we can change the titles. 
+```{r}
+options(repr.plot.width=12, repr.plot.height=3)
+ggarrange(p_feat$importance_p + labs('Importance')
+          , p_feat$influence_p + labs('Influence')
+          , widths = c(0.25, 0.7)) # better! 
+```
+Women and children first? yes but especially if they are wealthy (the class is 
+one of the most important features).. 
+
+
+Now the network:
+- from the 2nd class: men had low survival chances, women had high ones
+- from the 1st class: everyone had high survival chances, though they were even 
+higher for women
+```{r}
+options(repr.plot.width=8, repr.plot.height=5)
+plotNetwork(de_final, hide_isolated_nodes = FALSE)
+```
+
+We can also change the layout of the network and format edges and nodes via 
+`ggraph` - see layouts: 
+https://cran.r-project.org/package=ggraph. 
+To hide nodes that are not part of the network: `hide_isolated_nodes = TRUE`.
+
+```{r}
+options(repr.plot.width=8, repr.plot.height=5)
+plotNetwork(de_final, hide_isolated_nodes = TRUE
+            , layout = 'fr')+ # I usually prefer the 'fr' layout :)
+scale_edge_alpha(range = c(0.8, 1))
+```
+
+
+# Bootstrap in parallel
+
+Instead of running bootstraps one after the other, we can also run them in 
+parallel. For this, we will first extract decisions and discretize variables 
+using the `preCluster()` function and then run endoR on each bootstrap with the 
+`model2DE_cluster()` function, managed by the `Q()` function from the 
+`clustermq` R-package. 
+
+The clustermq R-package allows to run jobs in parallel
+locally or on HPC environments; see its anual for configuration: 
+https://mschubert.github.io/clustermq/articles/userguide.html. For the tutorial,
+I will run it on my computer (`clustermq.scheduler = "multiprocess"`).
+
+
+## Extract decisions and discretize variables
+
+```{r}
+preclu <- preCluster(model = titanic_rf, model_type = 'ranger'
+                  , data = titanic %>% select(-survived)
+                  , target = titanic$survived, classPos = 'yes'
+                  , times = 5 # number of bootstraps
+                  , sample_weight = samp_weight # sample weight for resampling
+                  , discretize = TRUE, K = 2
+                  , in_parallel = FALSE) 
+```
+
+## Run endoR in parallel on each bootstrap
+
+Let's set the clustermq parameters:
+```{r}
+options(clustermq.scheduler = "multiprocess")
+```
+
+```{r}
+rules <- Q(model2DE_cluster
+  , partition = preclu$partitions
+  , export=list(data = preclu$data
+                , target = titanic$survived
+                , exec = preclu$exec
+                , classPos = 'yes'
+                , prune = TRUE, maxDecay = 0.05, typeDecay = 2 
+                , filter = FALSE
+                , in_parallel = TRUE, n_cores = 1 # keep to 1 to pass CRAN check but could be higher given your resources
+               )
+  , n_jobs= 2 # 2 bootstraps will be processed in parallel 
+  , pkgs=c('data.table', 'parallel', 'caret', 'stringr', 'scales', 'dplyr'
+            , 'inTrees', 'endoR')
+  , log_worker=FALSE
+ )
+```
+
+## Stability selection
+
+Just like above, except that now data are in `preclu$data` and not in the rules.
+```{r}
+de_final <- stabilitySelection(rules = rules, alpha_error = 3)
+```
+
+```{r}
+de_final$rules_summary %>% subset(inN >= .7*5) %>% 
+     presentRules(colN = colnames(preclu$data)) %>% head
+```
+
+## Plots
+```{r}
+p_feat <- plotFeatures(decision_ensemble = de_final, return_all = TRUE
+      , levels_order = c('male', 'female'
+                         , 'engineering crew', 'restaurant staff', 'deck crew'
+                                , 'victualling crew' , '3rd', '2nd', '1st'
+                         , 'Belfast', 'Cherbourg', 'Queenstown', 'Southampton'
+                         , 'Low', 'Medium', 'High')
+                      )
+```
+
+```{r}
+options(repr.plot.width=12, repr.plot.height=3)
+ggarrange(p_feat$importance_p + labs(title = 'Importance')
+          , p_feat$influence_p + labs(title = 'Influence')
+          , widths = c(0.25, 0.7)) # better! 
+```
+
+```{r}
+options(repr.plot.width=8, repr.plot.height=5)
+plotNetwork(de_final, hide_isolated_nodes = FALSE)+
+scale_edge_alpha(range = c(0.8, 1))
+```

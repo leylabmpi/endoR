@@ -13,6 +13,8 @@
 #' @param n_cores if in_parallel = TRUE, and no cluster has been passed: number of cores to use.
 #' @param cluster the cluster to use to run the function in parallel.
 #' @return A list with in the nodes and edges dataframes, the feature and interaction importance and influence; the decision-wise feature and interaction importances and influences are contained in the nodes_agg and edges_agg dataframes.
+#'
+#' @example examples/iris_each_function.R
 #' @export
 getNetwork <- function(rules, data, target, classPos = NULL,
                        #additional_decisions = NULL,

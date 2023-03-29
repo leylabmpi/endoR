@@ -65,3 +65,81 @@ A list with the row numbers of partitioned data, the rules originally extracted 
 \description{
 to run before bootstrapping on parallel with the clustermq package and model2DE_cluster function. Extracts decisions, optionally discretizes them. Creates data partitions for bootstrapping.
 }
+\examples{
+library(randomForest)
+library(caret)
+
+# import data and fit model
+data(iris)
+mod <- randomForest(Species ~ ., data = iris)
+
+# Get decision ensemble with bootstrapping.
+
+# Run 1 bootstrap after the other (times = 2 bootstraps)
+endo_setosa <- model2DE_resampling(model = mod, model_type = "rf"
+    , data = iris[, -5], target = iris$Species, classPos = "setosa"
+    , times = 2, in_parallel = TRUE, n_cores = 2, filter = FALSE)
+
+# Same but use different sample weights for bootstrapping
+n_setosa <- sum(iris$Species == "setosa")
+n_samp <- length(iris$Species)
+samp_weight <- round(
+    ifelse(iris$Species == "setosa", 1 - n_setosa/n_samp, n_setosa/n_samp)
+    , digits = 2)
+endo_setosa <- model2DE_resampling(model = mod, model_type = "rf"
+    , data = iris[, -5], target = iris$Species, classPos = "setosa"
+    , times = 2, sample_weight = samp_weight
+    , in_parallel = TRUE, n_cores = 2, filter = FALSE)
+
+# Run the bootstraps in parallel
+# First do all steps before bootstrapping
+preclu <- preCluster(model = mod, model_type = "rf", data = iris[, -5]
+    , target = iris$Species, classPos = "setosa", times = 2
+    , discretize = TRUE, in_parallel = FALSE)
+
+# Remove the special characters from column names
+colnames(preclu$data) <- compatibleNames(colnames(preclu$data))
+
+# Parameters for clustermq: can also run on HPC environment
+library(clustermq)
+options(clustermq.scheduler = "multiprocess")
+# ... and run in parallel on each bootstrap
+# (preclu$partitions = list of sample indexes for each bootstraps)
+endo_setosa <- Q(model2DE_cluster
+    , partition = preclu$partitions
+    , export = list(data = preclu$data
+                , target = iris$Species
+                , exec = preclu$exec
+                , classPos = "setosa"
+                , prune = TRUE, filter = FALSE
+                , maxDecay = 0.05 # values needed for maxDecay and typeDecay
+                , typeDecay = 2 # here default ones, see pruneDecisions()
+                , in_parallel = FALSE # can parallelize within each boostrap!
+           )
+    , n_jobs = 2 # max number of bootstraps that can be ran in parallel
+    , pkgs = c("data.table", "parallel", "caret", "stringr", "scales"
+                , "dplyr", "inTrees", "endoR")
+    , log_worker = FALSE # to keep a log of the runs, e.g. if it fails..
+)
+
+
+# Stability selection
+# First we can look at the effect of the alpha parameter on selection;
+# alpha = expected number of false decisions
+alphas <- evaluateAlpha(rules = endo_setosa, alphas = c(1:5, 7, 10)
+                        , data = preclu$data)
+alphas$summary_table
+
+# perform stability selection with alpha = 1
+de_final <- stabilitySelection(rules = endo_setosa, alpha_error = 7)
+
+# Plot the decision ensemble:
+# Plants from the setosa species have small petal and narrow long sepals.
+plotFeatures(de_final, levels_order = c("Low", "Medium", "High"))
+
+# there is no interaction between variables (all decisions with len = 1,
+# the number of variables in the rules)
+de_final$rules_summary
+# hence the network would be empty and couldn't be plotted...
+# plotNetwork(de_final, hide_isolated_nodes = FALSE)
+}

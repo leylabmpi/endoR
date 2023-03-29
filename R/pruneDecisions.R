@@ -12,6 +12,9 @@
 #' @param n_cores if in_parallel = TRUE, and no cluster has been passed: number of cores to use, default is detectCores() - 1.
 #' @param cluster the cluster to use to run the function in parallel.
 #' @return Decision ensemble with pruned conditions.
+#'
+#' @example examples/iris_each_function.R
+#'
 #' @export
 pruneDecisions <- function(rules, data, target, classPos = NULL, maxDecay = 0, typeDecay = 1,
                            in_parallel = FALSE, n_cores = detectCores() - 1, cluster = NULL) {

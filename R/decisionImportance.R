@@ -12,6 +12,7 @@
 #' @param cluster the cluster to use to run the function in parallel.
 #'
 #' @return the data.frame passed in rules with the gain and importance of the each decision.
+#' @example examples/iris_each_function.R
 #'
 #' @export
 decisionImportance <- function(rules, data, target, classPos = NULL,
