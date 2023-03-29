@@ -74,9 +74,13 @@ getMedian <- function(var, data, splitV) {
   dataVar <- data[[as.numeric(var)]]
   med <- list()
   for (i in 2:length(splitV[[var]])) {
-    iX <- which(dataVar >= splitV[[var]][i - 1] & dataVar <= splitV[[var]][i])
+    iX <- which(dataVar > splitV[[var]][i - 1] & dataVar <= splitV[[var]][i])
     med <- c(med, median(dataVar[iX], na.rm = TRUE))
   }
   names(med) <- names(splitV[[var]])[-1]
+
+  if (is.na(med[[1]])){
+    med[[1]] = min(dataVar)
+  }
   return(med)
 }
