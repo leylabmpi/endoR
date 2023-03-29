@@ -102,6 +102,8 @@ plotNetwork <- function(decision_ensemble, path_length = Inf,
   } else if (length(unique(decision_ensemble$edges$d_assoc)) ==
     1) {
     linetype <- "solid"
+  } else {
+    linetype <- c("dashed", "solid", "solid")
   }
   lim <- c(
     min(min(decision_ensemble$nodes$influence), min(decision_ensemble$edges$influence)),
