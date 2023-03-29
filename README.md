@@ -19,7 +19,7 @@ Article: Albane Ruaud, Niklas A Pfister, Ruth E Ley, Nicholas D Youngblut. Inter
 
 
 # Usage
-Installation: `devtools::install_github(repo = "aruaud/endoR")`
+Installation, with dependencies = FALSE should work to avoid updating everything: `devtools::install_github(repo = "aruaud/endoR", dep = FALSE)`
 
 Before: select and fit a machine learning model (regression or classification)
 - random forest R-packages: randomForest, ranger 
