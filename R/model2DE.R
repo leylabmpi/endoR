@@ -76,9 +76,7 @@ model2DE <- function(model, model_type, data, target,
   }
 
   # change class of data, otherwise bug with extractRules
-  if ("data.table" %in% class(data)) {
-    data <- as.data.frame(data)
-  }
+  data <- as.data.frame(data)
 
   # settings
   dig_ori <- getOption("digits")

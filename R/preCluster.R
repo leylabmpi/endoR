@@ -49,9 +49,7 @@ preCluster <- function(model, model_type, data, target,
 
 
   # change class of data, otherwise bug with extractRules
-  if ("data.table" %in% class(data)) {
-    data <- as.data.frame(data)
-  }
+  data <- as.data.frame(data)
 
   if (model_type %in% c("RF", "random forest", "rf")) {
     treeList <- RF2List(model)
